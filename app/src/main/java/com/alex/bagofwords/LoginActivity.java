@@ -54,12 +54,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
         // Click listener for login.
+        assert loginBtnPressed != null;
         loginBtnPressed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
 
+                assert usernameWrap != null;
                 String username = usernameWrap.getEditText().getText().toString();
+                assert passwordWrap != null;
                 String password = passwordWrap.getEditText().getText().toString();
                 if (!validateUsername(username)) {
                     usernameWrap.setError("Invalid Username");
@@ -74,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Click listener for create account.
+        assert signupPressed != null;
         signupPressed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
