@@ -1,6 +1,7 @@
 package com.alex.bagofwords;
 
         import android.content.Context;
+        import android.content.Intent;
         import android.support.design.widget.TextInputLayout;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
@@ -82,7 +83,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
-                Toast.makeText(getApplicationContext(), "Create Account", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Create Account", Toast.LENGTH_LONG).show();
+                Intent signupIntent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(signupIntent);
 
             }
         });
