@@ -29,10 +29,10 @@ public class LoginActivity extends AppCompatActivity {
         final EditText password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
 
-        assert loginButton != null;
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                assert email != null;
                 if(!validEmail(email.getText().toString())) {
                     email.setError("Invalid Email");
                     email.requestFocus();
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     // Validation of email method.
     protected boolean validEmail(String email) {
-        String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; // Email regular 
+        String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; // Email regular expression.
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
 
