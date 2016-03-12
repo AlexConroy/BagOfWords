@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     // Validation of email method.
     protected boolean validEmail(String email) {
-        String emailPattern = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$"; // Email regular expression.
+        String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; // Email regular 
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
 
