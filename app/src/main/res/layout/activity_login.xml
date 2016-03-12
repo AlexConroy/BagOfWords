@@ -31,7 +31,8 @@ android:fitsSystemWindows="true">
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:inputType="textEmailAddress"
-        android:hint="@string/username" />
+        android:hint="@string/username"
+        android:text=""/>
 
 
     <!-- Password Label -->
@@ -41,7 +42,8 @@ android:fitsSystemWindows="true">
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:inputType="textPassword"
-        android:hint="@string/password"/>
+        android:hint="@string/password"
+        android:text=""/>
 
 
     <!-- Login Button -->
