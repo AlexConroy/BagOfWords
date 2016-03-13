@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText email = (EditText) findViewById(R.id.input_email);
         final EditText password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
+        TextView registryAccount = (TextView) findViewById(R.id.link_registry);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +44,14 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG);
                 }
 
+            }
+        });
+
+        registryAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivity(i);
             }
         });
 
