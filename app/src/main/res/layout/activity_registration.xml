@@ -55,7 +55,7 @@ android:fitsSystemWindows="true">
         android:hint="@string/password"
         android:text=""/>
 
-    <!-- Confrim Password Label -->
+    <!-- Confirm Password Label -->
     <EditText android:id="@+id/compare_input_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,13 +68,13 @@ android:fitsSystemWindows="true">
 
     <!-- Registry Button -->
     <Button
-        android:id="@+id/button_registry"
+        android:id="@+id/button_register"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:padding="12dp"
-        android:text="@string/registry"/>
+        android:text="@string/register"/>
 
     <!-- Create Account -->
     <TextView android:id="@+id/link_login"

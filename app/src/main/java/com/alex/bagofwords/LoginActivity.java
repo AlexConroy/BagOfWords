@@ -47,11 +47,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        assert registryAccount != null;
         registryAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, RegistrationActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivity(intent);
             }
         });
 

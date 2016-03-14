@@ -6,6 +6,6 @@
     <string name="createAccount">No account? Registry Account</string>
     <string name="name">Name</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="registry">Registry</string>
+    <string name="register">register</string>
     <string name="linkToLogin">Already have an account? Login</string>
 </resources>
