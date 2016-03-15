@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText email = (EditText) findViewById(R.id.input_email);
         final EditText password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
-        TextView registryAccount = (TextView) findViewById(R.id.link_registry);
+        TextView registerAccount = (TextView) findViewById(R.id.link_register);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,14 +47,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        assert registryAccount != null;
-        registryAccount.setOnClickListener(new View.OnClickListener() {
+        registerAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
                 startActivity(intent);
+
             }
         });
+
+
+        /*
+
+        registerAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                startActivity(intent);
+            }
+        }); */
 
 
     }

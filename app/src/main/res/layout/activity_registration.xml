@@ -76,7 +76,7 @@ android:fitsSystemWindows="true">
         android:padding="12dp"
         android:text="@string/register"/>
 
-    <!-- Create Account -->
+    <!-- Login -->
     <TextView android:id="@+id/link_login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
