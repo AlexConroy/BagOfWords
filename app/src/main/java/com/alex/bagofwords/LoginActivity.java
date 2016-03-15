@@ -20,15 +20,22 @@ import java.util.regex.Pattern;
 public class LoginActivity extends AppCompatActivity {
 
 
+    LoginDataBaseAdapter loginDataBaseAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        loginDataBaseAdapter = new LoginDataBaseAdapter(this);
+        loginDataBaseAdapter = loginDataBaseAdapter.open();
+
         final EditText email = (EditText) findViewById(R.id.input_email);
         final EditText password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
+
+        final String dbStoredEmail = loginDataBaseAdapter.getSinlgeEntry(email.getText().toString());
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
                     password.requestFocus();
                 } else {
                     Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    if(email.getText().toString().equals(dbStoredEmail)){
+                        Toast.makeText(LoginActivity.this, "Logging perfect!", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }
@@ -71,6 +81,13 @@ public class LoginActivity extends AppCompatActivity {
     // Validation of password method (i.e. must be getter than 5)
     protected boolean validPassword(String password) {
         return password.length() >= 6;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginDataBaseAdapter.close();
     }
 
 

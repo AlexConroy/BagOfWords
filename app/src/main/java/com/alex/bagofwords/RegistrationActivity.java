@@ -15,10 +15,16 @@ import java.util.regex.Pattern;
 public class RegistrationActivity extends AppCompatActivity {
 
 
+    LoginDataBaseAdapter loginDataBaseAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        loginDataBaseAdapter = new LoginDataBaseAdapter(this);
+        loginDataBaseAdapter = loginDataBaseAdapter.open();
 
         final EditText name = (EditText) findViewById(R.id.input_name);
         final EditText email = (EditText) findViewById(R.id.input_email);
@@ -26,6 +32,8 @@ public class RegistrationActivity extends AppCompatActivity {
         final EditText comparePassword = (EditText) findViewById(R.id.compare_input_password);
         Button register = (Button) findViewById(R.id.button_register);
         TextView login = (TextView) findViewById(R.id.link_login);
+
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +53,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     comparePassword.requestFocus();
                 } else {
                     Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    loginDataBaseAdapter.insertEntry(email.getText().toString(), password.getText().toString());
                 }
 
             }
@@ -61,9 +70,13 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     protected boolean validName(String name) {
+       /* String namePattern = "[^a-zA-Z]";
+        Pattern pattern = Pattern.compile(namePattern);
+        Matcher matcher = pattern.matcher(name);
+        return (name.length() >= 2 && name.length() <=30) && matcher.matches(); */
         return (name.length() >= 2 && name.length() <=30);
-    }
 
+    }
 
     // Validation of email method.
     protected boolean validEmail(String email) {
@@ -81,6 +94,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
     protected boolean matchingPassword(String password, String comparePassword) {
         return (password.equals(comparePassword));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginDataBaseAdapter.close();
     }
 
 
