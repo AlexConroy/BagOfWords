@@ -56,10 +56,11 @@ android:fitsSystemWindows="true">
         android:padding="12dp"
         android:text="@string/loginButton"/>
 
-    <!-- Create Account -->
+    <!-- Create Account/Register -->
     <TextView android:id="@+id/link_register"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:layout_marginBottom="24dp"
         android:text="@string/createAccount"
         android:gravity="center"
@@ -67,3 +68,4 @@ android:fitsSystemWindows="true">
 
 </LinearLayout>
 </ScrollView>
+

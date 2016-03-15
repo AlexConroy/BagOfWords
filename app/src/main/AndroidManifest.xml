@@ -21,6 +21,7 @@
         <activity android:name=".RegistrationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
+
         </activity>
     </application>
 

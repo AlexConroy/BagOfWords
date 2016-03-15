@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
 
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG);
+                    Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -50,22 +51,11 @@ public class LoginActivity extends AppCompatActivity {
         registerAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-                startActivity(intent);
+                Intent intentRegister = new Intent(getApplicationContext() , RegistrationActivity.class);
+                startActivity(intentRegister);
 
             }
         });
-
-
-        /*
-
-        registerAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-                startActivity(intent);
-            }
-        }); */
 
 
     }

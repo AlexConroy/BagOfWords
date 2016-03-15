@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 tools:context="com.alex.bagofwords.RegistrationActivity"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:fitsSystemWindows="true">
+
 
 <LinearLayout
     android:orientation="vertical"
@@ -29,7 +31,8 @@ android:fitsSystemWindows="true">
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:inputType="text"
+        android:maxLength="35"
+        android:inputType="text|textCapWords"
         android:hint="@string/name"
         android:text=""/>
 
@@ -55,7 +58,7 @@ android:fitsSystemWindows="true">
         android:hint="@string/password"
         android:text=""/>
 
-    <!-- Confirm Password Label -->
+    <!-- Compare Password Label -->
     <EditText android:id="@+id/compare_input_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,7 +69,7 @@ android:fitsSystemWindows="true">
         android:text=""/>
 
 
-    <!-- Registry Button -->
+    <!-- Register Button -->
     <Button
         android:id="@+id/button_register"
         android:layout_width="fill_parent"
@@ -76,7 +79,7 @@ android:fitsSystemWindows="true">
         android:padding="12dp"
         android:text="@string/register"/>
 
-    <!-- Login -->
+    <!-- Login Activity -->
     <TextView android:id="@+id/link_login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -87,3 +90,4 @@ android:fitsSystemWindows="true">
 
 </LinearLayout>
 </ScrollView>
+

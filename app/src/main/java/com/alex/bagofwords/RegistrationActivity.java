@@ -14,17 +14,18 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    final EditText name = (EditText) findViewById(R.id.input_name);
-    final EditText email = (EditText) findViewById(R.id.input_email);
-    final EditText password = (EditText) findViewById(R.id.input_password);
-    Button register = (Button) findViewById(R.id.button_register);
-    TextView login = (TextView) findViewById(R.id.link_login);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        final EditText name = (EditText) findViewById(R.id.input_name);
+        final EditText email = (EditText) findViewById(R.id.input_email);
+        final EditText password = (EditText) findViewById(R.id.input_password);
+        final EditText comparePassword = (EditText) findViewById(R.id.compare_input_password);
+        Button register = (Button) findViewById(R.id.button_register);
+        TextView login = (TextView) findViewById(R.id.link_login);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,8 +40,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 } else if (!validPassword(password.getText().toString())) {
                     password.setError("Invalid Password");
                     password.requestFocus();
+                } else if (!matchingPassword(password.getText().toString(), comparePassword.getText().toString())) {
+                    comparePassword.setError("Passwords don't match");
+                    comparePassword.requestFocus();
                 } else {
-                    Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG);
+                    Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -53,11 +57,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
 
     }
 
@@ -78,6 +77,10 @@ public class RegistrationActivity extends AppCompatActivity {
     // Validation of password method (i.e. must be getter than 5)
     protected boolean validPassword(String password) {
         return password.length() >= 6;
+    }
+
+    protected boolean matchingPassword(String password, String comparePassword) {
+        return (password.equals(comparePassword));
     }
 
 
