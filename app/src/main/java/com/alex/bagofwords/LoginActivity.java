@@ -19,45 +19,49 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
+    EditText emailETL, passwordETL;
+    Button loginButton;
+    TextView registerAccount;
 
     LoginDataBaseAdapter loginDataBaseAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        emailETL = (EditText) findViewById(R.id.input_email);
+        passwordETL = (EditText) findViewById(R.id.input_password);
+        loginButton = (Button) findViewById(R.id.button_login);
+        registerAccount = (TextView) findViewById(R.id.link_register);
+
         loginDataBaseAdapter = new LoginDataBaseAdapter(this);
         loginDataBaseAdapter = loginDataBaseAdapter.open();
-
-        final EditText email = (EditText) findViewById(R.id.input_email);
-        final EditText password = (EditText) findViewById(R.id.input_password);
-        Button loginButton = (Button) findViewById(R.id.button_login);
-        TextView registerAccount = (TextView) findViewById(R.id.link_register);
-
-        final String dbStoredEmail = loginDataBaseAdapter.getSinlgeEntry(email.getText().toString());
-        final String dbStoredPassword = loginDataBaseAdapter.getSinlgeEntry(password.getText().toString());
-
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assert email != null;
-                if(!validEmail(email.getText().toString())) {
-                    email.setError("Invalid Email");
-                    email.requestFocus();
-                } else if (!validPassword(password.getText().toString())) {
-                    password.setError("Invalid Password");
-                    password.requestFocus();
+
+                String email = emailETL.getText().toString();
+                String password = passwordETL.getText().toString();
+
+                String storedPassword = loginDataBaseAdapter.getSinlgeEntry(email);
+
+                if(!validEmail(email)) {
+                    emailETL.setError("Invalid Email");
+                    emailETL.requestFocus();
+                } else if (!validPassword(password)) {
+                    passwordETL.setError("Invalid Password");
+                    passwordETL.requestFocus();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Validation Success: " + email.getText().toString(), Toast.LENGTH_LONG).show();
-                    if(checkDbInstance(email.getText().toString(), dbStoredEmail) && checkDbInstance(password.getText().toString(), dbStoredPassword)){
-                        Toast.makeText(LoginActivity.this, "You are a user!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(LoginActivity.this, "Validation Success: ", Toast.LENGTH_LONG).show();
+                    if(password.equals(storedPassword)) {
+                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Not a user! Create an account!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Incorrect Credentials", Toast.LENGTH_LONG).show();
                     }
                 }
-
             }
         });
 
@@ -86,8 +90,8 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() >= 6;
     }
 
-    protected boolean checkDbInstance(String password, String dbPassword){
-        return password.equals(dbPassword);
+    protected boolean checkDbInstance(String value, String dbValue){
+        return value.equals(dbValue);
     }
 
 

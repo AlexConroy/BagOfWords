@@ -34,7 +34,7 @@ android:fitsSystemWindows="true">
         android:maxLength="35"
         android:inputType="text|textCapWords"
         android:hint="@string/name"
-        android:text=""/>
+        />
 
 
     <!-- Email Label -->
@@ -45,7 +45,7 @@ android:fitsSystemWindows="true">
         android:layout_marginBottom="8dp"
         android:inputType="textEmailAddress"
         android:hint="@string/username"
-        android:text=""/>
+        />
 
 
     <!-- Password Label -->
@@ -56,7 +56,7 @@ android:fitsSystemWindows="true">
         android:layout_marginBottom="8dp"
         android:inputType="textPassword"
         android:hint="@string/password"
-        android:text=""/>
+        />
 
     <!-- Compare Password Label -->
     <EditText android:id="@+id/compare_input_password"
@@ -66,7 +66,7 @@ android:fitsSystemWindows="true">
         android:layout_marginBottom="8dp"
         android:inputType="textPassword"
         android:hint="@string/confirm_password"
-        android:text=""/>
+        />
 
 
     <!-- Register Button -->
