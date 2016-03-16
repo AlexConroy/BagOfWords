@@ -52,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     comparePassword.setError("Passwords don't match");
                     comparePassword.requestFocus();
                 } else {
-                    Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrationActivity.this, "Validation Success: ", Toast.LENGTH_LONG).show();
                     loginDataBaseAdapter.insertEntry(email.getText().toString(), password.getText().toString());
                 }
 

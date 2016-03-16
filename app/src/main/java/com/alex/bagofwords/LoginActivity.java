@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
 
         final String dbStoredEmail = loginDataBaseAdapter.getSinlgeEntry(email.getText().toString());
+        final String dbStoredPassword = loginDataBaseAdapter.getSinlgeEntry(password.getText().toString());
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -49,9 +50,11 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
-                    if(email.getText().toString().equals(dbStoredEmail)){
-                        Toast.makeText(LoginActivity.this, "Logging perfect!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Validation Success: " + email.getText().toString(), Toast.LENGTH_LONG).show();
+                    if(checkDbInstance(email.getText().toString(), dbStoredEmail) && checkDbInstance(password.getText().toString(), dbStoredPassword)){
+                        Toast.makeText(LoginActivity.this, "You are a user!!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Not a user! Create an account!!", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -81,6 +84,10 @@ public class LoginActivity extends AppCompatActivity {
     // Validation of password method (i.e. must be getter than 5)
     protected boolean validPassword(String password) {
         return password.length() >= 6;
+    }
+
+    protected boolean checkDbInstance(String password, String dbPassword){
+        return password.equals(dbPassword);
     }
 
 
