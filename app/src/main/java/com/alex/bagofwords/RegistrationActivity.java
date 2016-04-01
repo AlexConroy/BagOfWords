@@ -14,18 +14,22 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
+    EditText name, username, email, password, comparePassword;
+    Button register;
+    TextView login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        final EditText name = (EditText) findViewById(R.id.input_name);
-        final EditText email = (EditText) findViewById(R.id.input_email);
-        final EditText password = (EditText) findViewById(R.id.input_password);
-        final EditText comparePassword = (EditText) findViewById(R.id.compare_input_password);
-        Button register = (Button) findViewById(R.id.button_register);
-        TextView login = (TextView) findViewById(R.id.link_login);
+        name = (EditText) findViewById(R.id.input_name);
+        email = (EditText) findViewById(R.id.input_email);
+        password = (EditText) findViewById(R.id.input_password);
+        comparePassword = (EditText) findViewById(R.id.compare_input_password);
+        register = (Button) findViewById(R.id.button_register);
+        login = (TextView) findViewById(R.id.link_login);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
