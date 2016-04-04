@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class RegistrationActivity extends AppCompatActivity {
     TextView login;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +55,16 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                InputMethodManager imm = (InputMethodManager) getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 if (!validName(name.getText().toString())) {
                     name.setError("Name is be between 2 and 30 characters");
                     name.requestFocus();
+                } else if (!validUsername(username.getText().toString())) {
+                    username.setError("Invalid username.");
+                    username.requestFocus();
+
                 } else if (!validName(username.getText().toString())) {
                     username.setError("Invalid Username");
                     username.requestFocus();
@@ -68,7 +78,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     comparePassword.setError("Passwords don't match");
                     comparePassword.requestFocus();
                 } else {
-                    Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
                     registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
 
                 }
@@ -85,6 +95,12 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
     }
+
+    protected boolean validUsername(String username) {
+
+        return !username.matches("");
+    }
+
 
     protected boolean validName(String name) {
         return (name.length() >= 2 && name.length() <=30);

@@ -8,5 +8,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register">register</string>
     <string name="linkToLogin">Already have an account? Login</string>
+    <string name="login">Username/Email</string>
     <string name="username">Username</string>
 </resources>

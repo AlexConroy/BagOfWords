@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +32,13 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String LOGIN_URL = "http://www.bagofwords-ca400.com/webservice/LoginUser.php";
 
-    public static final String KEY_LOGIN = "email";
+    public static final String KEY_LOGIN = "login";
     public static final String KEY_PASSWORD = "password";
 
-    EditText email;
+    EditText login;
     EditText password;
+
+
 
 
     @Override
@@ -42,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = (EditText) findViewById(R.id.input_email);
+        login = (EditText) findViewById(R.id.input_login);
         password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
@@ -51,16 +55,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assert email != null;
-                if(!validEmail(email.getText().toString())) {
-                    email.setError("Invalid Email");
-                    email.requestFocus();
+
+                assert login != null;
+                if(login.getText().toString().matches("")) {
+                    login.setError("Enter username/email");
+                    login.requestFocus();
                 } else if (!validPassword(password.getText().toString())) {
                     password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
-                    userLogin(email.getText().toString(), password.getText().toString());
+                    //Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    userLogin(login.getText().toString(), password.getText().toString());
 
                 }
 
@@ -103,8 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.equals("success")) {
-
+                        if (response.equals("Successful login")) {
+                            //Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
                         }
