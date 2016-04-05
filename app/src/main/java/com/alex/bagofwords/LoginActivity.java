@@ -21,6 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,8 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText login;
     EditText password;
 
-
-
+    //UserDataBaseHandler userDataBaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
+
+       // userDataBaseHandler = new UserDataBaseHandler(this, null, null, 1);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +68,37 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
-                    //Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
-                    userLogin(login.getText().toString(), password.getText().toString());
+                   // Toast.makeText(LoginActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                    //userLogin(login.getText().toString(), password.getText().toString());
+
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean successfulLogin = jsonResponse.getBoolean("successful");
+                                if(successfulLogin) {
+                                    Toast.makeText(LoginActivity.this, "App: Successful login", Toast.LENGTH_LONG).show();
+                                    String name = jsonResponse.getString("name");
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("name", name);
+                                    LoginActivity.this.startActivity(intent);
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "App: Incorrect credentials", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    LoginFetch loginFetch = new LoginFetch(login.getText().toString(), password.getText().toString(), responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+                    queue.add(loginFetch);
+                    }
 
                 }
 
-            }
         });
 
         registerAccount.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void userLogin(String e, String p) {
+    private void userLogin(final String e, String p) {
 
         final String login = e;
         final String password = p;
@@ -108,17 +137,18 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.equals("Successful login")) {
-                            //Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+                        if (response.trim().equals("Successful login")) {
+                            Toast.makeText(LoginActivity.this, "App: Successful login", Toast.LENGTH_LONG).show();
+                            successfulLogin();
                         } else {
-                            Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "App: Incorrect Credentials", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Cannot connect to database, check internet connection.", Toast.LENGTH_LONG).show();
                     }
 
                 }) {
@@ -134,6 +164,14 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+
+    }
+
+    private void successfulLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtra(KEY_USERNAME, username);
+        startActivity(intent);
+        finish();
 
     }
 

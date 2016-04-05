@@ -1,5 +1,6 @@
 package com.alex.bagofwords;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +40,8 @@ public class RegistrationActivity extends AppCompatActivity {
     Button register;
     TextView login;
 
+    UserDataBaseHandler userDataBaseHandler;
+
 
 
     @Override
@@ -50,6 +56,8 @@ public class RegistrationActivity extends AppCompatActivity {
         comparePassword = (EditText) findViewById(R.id.compare_input_password);
         register = (Button) findViewById(R.id.button_register);
         login = (TextView) findViewById(R.id.link_login);
+
+        userDataBaseHandler = new UserDataBaseHandler(RegistrationActivity.this, null, null, 4);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +88,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 } else {
                     //Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
                     registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
-
+                   // User user = new User(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
+                    //userDataBaseHandler.insertUser(user);
                 }
 
             }
@@ -138,13 +147,28 @@ public class RegistrationActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(RegistrationActivity.this, response, Toast.LENGTH_LONG).show();
+                        if (response.trim().equals("Successful Registration")) {
+                            Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
+                            successfulLogin();
+                        } else if (response.trim().equals("Username Exists")) {
+                            Toast.makeText(RegistrationActivity.this, "Username already exists", Toast.LENGTH_LONG).show();
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                            //builder.setMessage("Username already exists").setNegativeButton("Retry", null).create().show();
+                        } else if (response.trim().equals("Email Exists")) {
+                            Toast.makeText(RegistrationActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                            //builder.setMessage("Email already exists").setNegativeButton("Retry", null).create().show();
+                        } else {
+                            Toast.makeText(RegistrationActivity.this, "Unsuccessful Registration", Toast.LENGTH_LONG).show();
+                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                            //builder.setMessage("Unsuccessful Registration").setNegativeButton("Retry", null).create().show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegistrationActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegistrationActivity.this, "Cannot connect to database, check internet connection.", Toast.LENGTH_LONG).show();
                     }
                 }) {
             protected Map<String, String> getParams() {
@@ -160,6 +184,15 @@ public class RegistrationActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+
+    private void successfulLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtra(KEY_USERNAME, username);
+        startActivity(intent);
+        finish();
+
     }
 
 
