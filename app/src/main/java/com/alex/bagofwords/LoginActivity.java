@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "App: Successful login", Toast.LENGTH_LONG).show();
                                     String name = jsonResponse.getString("name");
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.putExtra("name", name);
+                                    //intent.putExtra("name", name);
                                     LoginActivity.this.startActivity(intent);
                                 } else {
                                     Toast.makeText(LoginActivity.this, "App: Incorrect credentials", Toast.LENGTH_LONG).show();

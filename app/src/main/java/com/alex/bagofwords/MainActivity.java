@@ -1,27 +1,41 @@
 package com.alex.bagofwords;
 
-import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.View;
+
+
+
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView welcomeMessage;
+    Toolbar toolbar;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        welcomeMessage = (TextView) findViewById(R.id.welcomeText);
+        toolbar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        String message = name + " welcome to Bag of Words.";
-        welcomeMessage.setText(message);
+        viewPagerAdapter.addFragments(new FragmentOne(), "User");
+        viewPagerAdapter.addFragments(new FragmentTwo(), "Play");
+        viewPagerAdapter.addFragments(new FragmentThree(), "Leaderboard");
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
 
     }
