@@ -13,25 +13,24 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/RegisterTheme">
+            android:theme="@style/RegisterTheme"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
+            android:name=".RegistrationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/RegisterTheme"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegistrationActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/RegisterTheme">
-
-
-        </activity>
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+        <activity android:name=".TestActivity">
         </activity>
     </application>
 

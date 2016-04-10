@@ -38,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     public static final String KEY_LOGIN = "login";
     public static final String KEY_PASSWORD = "password";
 
+    UserSharedPrefHandler userSharedPrefHandler;
+
     EditText login;
     EditText password;
 
@@ -48,13 +50,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+
         login = (EditText) findViewById(R.id.input_login);
         password = (EditText) findViewById(R.id.input_password);
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
 
        // userDataBaseHandler = new UserDataBaseHandler(this, null, null, 1);
-
+        Toast.makeText(getApplicationContext(), "User login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,10 +83,19 @@ public class LoginActivity extends AppCompatActivity {
                                 boolean successfulLogin = jsonResponse.getBoolean("successful");
                                 if(successfulLogin) {
                                     Toast.makeText(LoginActivity.this, "App: Successful login", Toast.LENGTH_LONG).show();
+                                    String id = jsonResponse.getString("id");
                                     String name = jsonResponse.getString("name");
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    String username = jsonResponse.getString("username");
+                                    String email = jsonResponse.getString("email");
+                                    String score = jsonResponse.getString("score");
+                                    userSharedPrefHandler.establishUserSession(id, name, username, email, score);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
                                     //intent.putExtra("name", name);
-                                    LoginActivity.this.startActivity(intent);
+                                    //LoginActivity.this.startActivity(intent);
+                                    finish();
                                 } else {
                                     Toast.makeText(LoginActivity.this, "App: Incorrect credentials", Toast.LENGTH_LONG).show();
                                 }
