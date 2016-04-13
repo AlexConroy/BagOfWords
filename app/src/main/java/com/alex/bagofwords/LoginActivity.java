@@ -1,15 +1,11 @@
 package com.alex.bagofwords;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText login;
     EditText password;
 
-    //UserDataBaseHandler userDataBaseHandler;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = (Button) findViewById(R.id.button_login);
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
 
-       // userDataBaseHandler = new UserDataBaseHandler(this, null, null, 1);
         Toast.makeText(getApplicationContext(), "User login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean successfulLogin = jsonResponse.getBoolean("successful");
+                                Toast.makeText(LoginActivity.this, "getBoolean:: " + successfulLogin, Toast.LENGTH_LONG).show();
+
                                 if(successfulLogin) {
                                     Toast.makeText(LoginActivity.this, "App: Successful login", Toast.LENGTH_LONG).show();
                                     String id = jsonResponse.getString("id");
@@ -89,12 +84,11 @@ public class LoginActivity extends AppCompatActivity {
                                     String email = jsonResponse.getString("email");
                                     String score = jsonResponse.getString("score");
                                     userSharedPrefHandler.establishUserSession(id, name, username, email, score);
+
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-                                    //intent.putExtra("name", name);
-                                    //LoginActivity.this.startActivity(intent);
                                     finish();
                                 } else {
                                     Toast.makeText(LoginActivity.this, "App: Incorrect credentials", Toast.LENGTH_LONG).show();
@@ -105,9 +99,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     };
 
-                    LoginFetch loginFetch = new LoginFetch(login.getText().toString(), password.getText().toString(), responseListener);
+                    UserDetailsPostFetch userDetailsPostFetch = new UserDetailsPostFetch(login.getText().toString(), password.getText().toString(), responseListener);
                     RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                    queue.add(loginFetch);
+                    queue.add(userDetailsPostFetch);
                     }
 
                 }

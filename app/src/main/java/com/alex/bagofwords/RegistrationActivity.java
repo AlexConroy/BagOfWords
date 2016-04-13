@@ -29,20 +29,21 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private static final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUser.php";
+    private static final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUserV5.php";
     public static final String KEY_NAME = "name";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
 
+    //public static final String
+
+    UserSharedPrefHandler userSharedPrefHandler;
 
     EditText name, username, email, password, comparePassword;
     Button register;
     TextView login;
 
     UserDataBaseHandler userDataBaseHandler;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,8 @@ public class RegistrationActivity extends AppCompatActivity {
         register = (Button) findViewById(R.id.button_register);
         login = (TextView) findViewById(R.id.link_login);
 
-        userDataBaseHandler = new UserDataBaseHandler(RegistrationActivity.this, null, null, 4);
+        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,10 +88,40 @@ public class RegistrationActivity extends AppCompatActivity {
                     comparePassword.setError("Passwords don't match");
                     comparePassword.requestFocus();
                 } else {
-                    //Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
-                    registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
-                   // User user = new User(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
-                    //userDataBaseHandler.insertUser(user);
+                        //Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
+                        //registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
+                        //User user = new User(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean successfulRegister = jsonResponse.getBoolean("successful");
+                                //Toast.makeText(RegistrationActivity.this, "getString:: " + successfulRegister, Toast.LENGTH_LONG).show();
+
+                                if(successfulRegister) {
+                                    //Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
+                                    String id = jsonResponse.getString("id");
+                                    String score = jsonResponse.getString("score");
+                                    userSharedPrefHandler.establishUserSession(id, name.getText().toString(), username.getText().toString(), email.getText().toString(), score);
+
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(RegistrationActivity.this, "App: Username/Email already exists", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    UserDetailsPostFetch userDetailsPostFetch = new UserDetailsPostFetch(name.getText().toString(), username.getText().toString(), email.getText().toString(), password.getText().toString(), responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(RegistrationActivity.this);
+                    queue.add(userDetailsPostFetch);
                 }
 
             }
@@ -134,7 +166,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return (password.equals(comparePassword));
     }
 
-
+/*
     private void registerUser(String n, String u, String e, String p) {
 
 
@@ -147,21 +179,16 @@ public class RegistrationActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.trim().equals("Successful Registration")) {
+                        if (response.trim().equals("successful")) {
                             Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
+                            userSharedPrefHandler.establishUserSession(name, username, email);
                             successfulLogin();
-                        } else if (response.trim().equals("Username Exists")) {
+                        } else if (response.trim().equals("username exists")) {
                             Toast.makeText(RegistrationActivity.this, "Username already exists", Toast.LENGTH_LONG).show();
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-                            //builder.setMessage("Username already exists").setNegativeButton("Retry", null).create().show();
-                        } else if (response.trim().equals("Email Exists")) {
+                        } else if (response.trim().equals("email exists")) {
                             Toast.makeText(RegistrationActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-                            //builder.setMessage("Email already exists").setNegativeButton("Retry", null).create().show();
                         } else {
                             Toast.makeText(RegistrationActivity.this, "Unsuccessful Registration", Toast.LENGTH_LONG).show();
-                            //AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-                            //builder.setMessage("Unsuccessful Registration").setNegativeButton("Retry", null).create().show();
                         }
                     }
                 },
@@ -184,15 +211,15 @@ public class RegistrationActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }
+    }*/
 
 
     private void successfulLogin() {
-        Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra(KEY_USERNAME, username);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
-
     }
 
 

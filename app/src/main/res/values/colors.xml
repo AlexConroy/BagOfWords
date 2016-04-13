@@ -3,12 +3,17 @@
     <!--
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#0288D1</color>
-    <color name="colorAccent">#EEFF41</color> -->
+    <color name="colorAccent">#EEFF41</color>
 
     <color name="colorPrimary">#125688</color>
     <color name="colorPrimaryDark">#125688</color>
     <color name="textColorPrimary">#FFFFFF</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#c8e8ff</color>-->
+
+    <color name="colorPrimary">#78A1BB</color>
+    <color name="colorPrimaryDark">#78A1BB</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#485665</color>
 
 
 </resources>

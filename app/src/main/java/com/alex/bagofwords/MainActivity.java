@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
         String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
 
+        Toast.makeText(MainActivity.this, "Test: " + nameSaved, Toast.LENGTH_SHORT).show();
+
+
         toolbar = (Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
 
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
