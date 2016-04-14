@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String score = jsonResponse.getString("score");
                                     userSharedPrefHandler.establishUserSession(id, name, username, email, score);
 
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void successfulLogin() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainMenu.class);
         //intent.putExtra(KEY_USERNAME, username);
         startActivity(intent);
         finish();

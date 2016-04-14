@@ -20,18 +20,16 @@
             android:name=".RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/RegisterTheme"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme">
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestActivity">
-        </activity>
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
