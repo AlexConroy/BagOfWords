@@ -14,14 +14,13 @@
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/RegisterTheme"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/RegisterTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
         <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".UpdatePassword" />
+        <activity android:name=".UpdateEmail"></activity>
     </application>
 
 </manifest>

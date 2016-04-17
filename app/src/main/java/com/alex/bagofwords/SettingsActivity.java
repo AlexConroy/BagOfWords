@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class SettingsActivity extends AppCompatActivity {
 
     Button mainMenu;
+    Button updatePasswordBtn;
     UserSharedPrefHandler userSharedPrefHandler;
 
 
@@ -26,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         mainMenu = (Button) findViewById(R.id.mainMenu);
+        updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
         userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
 
         mainMenu.setOnClickListener(new View.OnClickListener() {
@@ -37,9 +39,17 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        updatePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent updatePasswordIntent = new Intent(getApplicationContext(), UpdatePassword.class);
+                startActivity(updatePasswordIntent);
+            }
+        });
 
 
-        Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
         if(userSharedPrefHandler.checkLogin())
             finish();

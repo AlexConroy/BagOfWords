@@ -14,6 +14,7 @@
         <Button
             android:id="@+id/mainMenu"
             android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
             android:text="@string/mainMain"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -24,6 +25,7 @@
             android:text="@string/settings"
             android:id="@+id/settings"
             android:background="@color/colorAccent"
+            android:textColor="#FFFFFF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -31,7 +33,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/update_passwordBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+
+            android:text="Change Password"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>
