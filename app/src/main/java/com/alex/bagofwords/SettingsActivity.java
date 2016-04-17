@@ -18,6 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     Button mainMenu;
     Button updatePasswordBtn;
+    Button updateEmailBtn;
     UserSharedPrefHandler userSharedPrefHandler;
 
 
@@ -28,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mainMenu = (Button) findViewById(R.id.mainMenu);
         updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
+        updateEmailBtn = (Button) findViewById(R.id.update_emailBtn);
         userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
 
         mainMenu.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +46,14 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent updatePasswordIntent = new Intent(getApplicationContext(), UpdatePassword.class);
                 startActivity(updatePasswordIntent);
+            }
+        });
+
+        updateEmailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent updateEmailIntent = new Intent(getApplicationContext(), UpdateEmail.class);
+                startActivity(updateEmailIntent);
             }
         });
 
