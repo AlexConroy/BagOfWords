@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String username = jsonResponse.getString("username");
                                     String email = jsonResponse.getString("email");
                                     String score = jsonResponse.getString("score");
-                                    userSharedPrefHandler.establishUserSession(id, name, username, email, score);
+                                    userSharedPrefHandler.establishUserSession(id, name, username, email, score, password.getText().toString());
 
                                     Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

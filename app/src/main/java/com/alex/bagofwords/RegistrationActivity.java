@@ -103,7 +103,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     //Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
                                     String id = jsonResponse.getString("id");
                                     String score = jsonResponse.getString("score");
-                                    userSharedPrefHandler.establishUserSession(id, name.getText().toString(), username.getText().toString(), email.getText().toString(), score);
+                                    userSharedPrefHandler.establishUserSession(id, name.getText().toString(), username.getText().toString(), email.getText().toString(), score, comparePassword.getText().toString());
 
                                     Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

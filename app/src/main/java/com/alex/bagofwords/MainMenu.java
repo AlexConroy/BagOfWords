@@ -37,6 +37,8 @@ public class MainMenu extends AppCompatActivity {
         String usernameSaved = user.get(UserSharedPrefHandler.KEY_USERNAME);
         String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
         String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
+        String password = user.get(UserSharedPrefHandler.KEY_PASSWORD);
+        Toast.makeText(getApplication(), "Password is: " + password, Toast.LENGTH_LONG).show();
 
         username = (TextView) findViewById(R.id.username);
         name = (TextView) findViewById(R.id.name);
