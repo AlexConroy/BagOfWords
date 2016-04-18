@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 
 public class MainMenu extends AppCompatActivity {
 
+    TextView username, name, email, score, id;
     Button settings;
     UserSharedPrefHandler userSharedPrefHandler;
 
@@ -24,9 +26,32 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+
+        if(userSharedPrefHandler.checkLogin())
+            finish();
+
+        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
+        String idSaved = user.get(UserSharedPrefHandler.KEY_ID);
+        String nameSaved = user.get(UserSharedPrefHandler.KEY_NAME);
+        String usernameSaved = user.get(UserSharedPrefHandler.KEY_USERNAME);
+        String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
+        String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
+
+        username = (TextView) findViewById(R.id.username);
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+        score = (TextView) findViewById(R.id.score);
+        id = (TextView) findViewById(R.id.id);
+
+        username.setText(usernameSaved);
+        name.setText(nameSaved);
+        email.setText(emailSaved);
+        score.setText(scoreSaved);
+        id.setText(idSaved);
+
 
         settings = (Button) findViewById(R.id.settings);
-        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,17 +65,6 @@ public class MainMenu extends AppCompatActivity {
 
 
         Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
-
-        if(userSharedPrefHandler.checkLogin())
-            finish();
-
-        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
-        String idSaved = user.get(UserSharedPrefHandler.KEY_ID);
-        String nameSaved = user.get(UserSharedPrefHandler.KEY_NAME);
-        String usernameSaved = user.get(UserSharedPrefHandler.KEY_USERNAME);
-        String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
-        String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
-
 
 
 
