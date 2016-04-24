@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.alex.bagofwords">
+    package="com.alex.bagofwords" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
@@ -22,23 +22,20 @@
             android:theme="@style/RegisterTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".TestActivity" />
-        <activity android:name=".MainMenu">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".MainMenu" >
 
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UpdatePassword" />
         <activity android:name=".UpdateEmail" />
-        <activity android:name=".GamePlay">
+        <activity android:name=".GamePlay" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".TestFetch" >
         </activity>
     </application>
 

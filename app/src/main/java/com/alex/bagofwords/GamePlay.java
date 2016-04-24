@@ -68,6 +68,13 @@ public class GamePlay extends AppCompatActivity {
         findViewById(R.id.thirdBtn).setOnLongClickListener(longListen);
         findViewById(R.id.fourthBtn).setOnLongClickListener(longListen);
 
+        findViewById(R.id.firstBtn).setOnDragListener(DropListner);
+        findViewById(R.id.secondBtn).setOnDragListener(DropListner);
+        findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
+        findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
+
+
+/*
         findViewById(R.id.targetDropOne).setOnDragListener(DropListner);
         findViewById(R.id.targetDropTwo).setOnDragListener(DropListner);
         findViewById(R.id.targetDropThree).setOnDragListener(DropListner);
@@ -76,7 +83,7 @@ public class GamePlay extends AppCompatActivity {
         targetOne = (Button) findViewById(R.id.targetDropOne);
         targetTwo = (Button) findViewById(R.id.targetDropTwo);
         targetThree = (Button) findViewById(R.id.targetDropThree);
-        targetFour = (Button) findViewById(R.id.targetDropFour);
+        targetFour = (Button) findViewById(R.id.targetDropFour);*/
 
         returnBtn = (Button) findViewById(R.id.returnBtn);
 
@@ -84,10 +91,10 @@ public class GamePlay extends AppCompatActivity {
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), " First Drop field text is: " + targetOne.getText().toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), " Second Drop field text is: " + targetTwo.getText().toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), " Third Drop field text is: " + targetThree.getText().toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), " Fourth Drop field text is: " + targetFour.getText().toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), " First Drop field text is: " + targetOne.getText().toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), " Second Drop field text is: " + targetTwo.getText().toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), " Third Drop field text is: " + targetThree.getText().toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), " Fourth Drop field text is: " + targetFour.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -149,8 +156,6 @@ public class GamePlay extends AppCompatActivity {
 
                 case DragEvent.ACTION_DROP:
                     //log.i("");
-                    //TextView target = (TextView) v;
-                    //TextView dragged = (TextView) event.getLocalState();
                     Button target = (Button) v;
                     Button dragged = (Button) event.getLocalState();
                     target.setText(dragged.getText());

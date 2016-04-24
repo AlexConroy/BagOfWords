@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private static final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUserV5.php";
+    private static final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUserV6.php";
     public static final String KEY_NAME = "name";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_EMAIL = "email";
@@ -95,37 +96,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         //Toast.makeText(RegistrationActivity.this, "Validation Success", Toast.LENGTH_LONG).show();
                         //registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
                         //User user = new User(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
-                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject jsonResponse = new JSONObject(response);
-                                boolean successfulRegister = jsonResponse.getBoolean("successful");
-                                //Toast.makeText(RegistrationActivity.this, "getString:: " + successfulRegister, Toast.LENGTH_LONG).show();
-
-                                if(successfulRegister) {
-                                    //Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
-                                    String id = jsonResponse.getString("id");
-                                    String score = jsonResponse.getString("score");
-                                    userSharedPrefHandler.establishUserSession(id, name.getText().toString(), username.getText().toString(), email.getText().toString(), score, comparePassword.getText().toString());
-
-                                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(RegistrationActivity.this, "App: Username/Email already exists", Toast.LENGTH_LONG).show();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    UserDetailsPostFetch userDetailsPostFetch = new UserDetailsPostFetch(name.getText().toString(), username.getText().toString(), email.getText().toString(), password.getText().toString(), responseListener);
-                    RequestQueue queue = Volley.newRequestQueue(RegistrationActivity.this);
-                    queue.add(userDetailsPostFetch);
+                        registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), comparePassword.getText().toString());
                 }
 
             }
@@ -170,52 +141,81 @@ public class RegistrationActivity extends AppCompatActivity {
         return (password.equals(comparePassword));
     }
 
-/*
-    private void registerUser(String n, String u, String e, String p) {
 
+    private void registerUser(final String name, final String username, final String email, final String password) {
 
-        final String name = n;
-        final String username = u;
-        final String email = e;
-        final String password = p;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response.trim().equals("successful")) {
-                            Toast.makeText(RegistrationActivity.this, "App: Successful Registration", Toast.LENGTH_LONG).show();
-                            userSharedPrefHandler.establishUserSession(name, username, email);
-                            successfulLogin();
-                        } else if (response.trim().equals("username exists")) {
-                            Toast.makeText(RegistrationActivity.this, "Username already exists", Toast.LENGTH_LONG).show();
-                        } else if (response.trim().equals("email exists")) {
-                            Toast.makeText(RegistrationActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegistrationActivity.this, "Unsuccessful Registration", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegistrationActivity.this, "Cannot connect to database, check internet connection.", Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(KEY_NAME, name);
-                params.put(KEY_USERNAME, username);
-                params.put(KEY_EMAIL, email);
-                params.put(KEY_PASSWORD, password);
-
-                return params;
-            }
-        };
+        final EditText usernameEditText= (EditText) findViewById(R.id.input_username);
+        final EditText emailEditText= (EditText) findViewById(R.id.input_email);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }*/
+        StringRequest request;
+
+        request = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("response");
+
+                    switch (success) {
+                        case "successful":
+                            String id = jsonObject.getString("id");
+                            String score = jsonObject.getString("score");
+                            Toast.makeText(getApplicationContext(), "Successful login", Toast.LENGTH_LONG).show();
+                            userSharedPrefHandler.establishUserSession(id, name, username, email, score, password);
+                            Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case "usernameAndEmailExists":
+                            usernameEditText.setError("Username already exists");
+                            emailEditText.setError("Email already exists");
+                            usernameEditText.requestFocus();
+                            emailEditText.requestFocus();
+                            break;
+
+                        case "usernameExists":
+                            usernameEditText.setError("Username already exists");
+                            usernameEditText.requestFocus();
+                            break;
+
+                        case "emailExists":
+                            emailEditText.setError("Username already exists");
+                            emailEditText.requestFocus();
+                            break;
+
+                        default:
+                            Toast.makeText(getApplicationContext(), "Unsuccessful Registration", Toast.LENGTH_LONG).show();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Error connecting to database, check network connection", Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+                hashMap.put("name", name);
+                hashMap.put("username", username);
+                hashMap.put("email", email);
+                hashMap.put("password", password);
+                return hashMap;
+            }
+        };
+        requestQueue.add(request);
+
+    }
 
 
     private void successfulLogin() {
