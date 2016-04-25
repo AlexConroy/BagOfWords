@@ -53,7 +53,7 @@ public class UpdateEmail extends AppCompatActivity {
         userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
         HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
         final String currentEmail = user.get(UserSharedPrefHandler.KEY_EMAIL);
-        //Toast.makeText(getApplicationContext(), "User email: " + currentEmail, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "User email: " + currentEmail, Toast.LENGTH_LONG).show();
 
         //EditText displayCurrentEmail = (EditText) findViewById(R.id.password);
         //displayCurrentEmail.setText(currentEmail);
@@ -138,20 +138,32 @@ public class UpdateEmail extends AppCompatActivity {
     private void updateEmail(final String oldEmail, final String newEmail) {
 
         final UserSharedPrefHandler prefHandler = new UserSharedPrefHandler(getApplicationContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest request;
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, EMAIL_CHANGE_URL,
+        request = new StringRequest(Request.Method.POST, EMAIL_CHANGE_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.trim().equals("successful")) {
-                            Toast.makeText(getApplicationContext(), "Email Changed", Toast.LENGTH_LONG).show();
-                            prefHandler.setEmail(newEmail);
-                            HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
-                            String test = user.get(UserSharedPrefHandler.KEY_EMAIL);
-                            Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Unsuccessful", Toast.LENGTH_LONG).show();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Boolean success = jsonObject.getBoolean("successful");
+                            if (success) {
+                                Toast.makeText(getApplicationContext(), "Email Changed", Toast.LENGTH_LONG).show();
+                                prefHandler.setEmail(newEmail);
+                                HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
+                                String test = user.get(UserSharedPrefHandler.KEY_EMAIL);
+                                Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Email already taken", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 },
@@ -172,8 +184,7 @@ public class UpdateEmail extends AppCompatActivity {
 
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        requestQueue.add(request);
 
     }
 

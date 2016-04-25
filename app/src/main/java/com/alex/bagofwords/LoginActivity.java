@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Nah!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Incorrect credentials", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -1,18 +1,25 @@
 package com.alex.bagofwords;
 
-/**
- * Created by Alex on 25/04/2016.
- */
+
 public class Contacts {
 
+    private String number;
+    private String username;
+    private String score;
 
-    public Contacts(String username, String score) {
+    public Contacts(String number, String username, String score) {
+        this.setNumber(number);
         this.setUsername(username);
         this.setScore(score);
     }
 
+    public String getNumber() {
+        return number;
+    }
 
-    private String username, score;
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
     public String getScore() {
         return score;

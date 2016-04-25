@@ -43,6 +43,42 @@
     </LinearLayout>
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/numberStatus"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="#No."
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/usernameStatus"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/numberStatus"
+            android:text="Username"
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/scoreStatus"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/usernameStatus"
+            android:text="Score"
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

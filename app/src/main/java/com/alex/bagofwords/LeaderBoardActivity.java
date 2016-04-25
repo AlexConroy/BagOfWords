@@ -37,9 +37,6 @@ public class LeaderBoardActivity extends AppCompatActivity {
         listView.setAdapter(contactAdapter);
 
 
-
-
-
         mainMenu = (Button) findViewById(R.id.mainMenu);
         mainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +70,10 @@ public class LeaderBoardActivity extends AppCompatActivity {
                                 JSONObject leaderBoard = jsonArray.getJSONObject(i);
                                 String usernameFetch = leaderBoard.getString("username");
                                 String scoreFetch = leaderBoard.getString("score");
-                                Contacts contacts = new Contacts(usernameFetch, scoreFetch);
+                                int number = i + 1;
+                                String numberToString = Integer.toString(number);
+                                Contacts contacts = new Contacts(numberToString, usernameFetch, scoreFetch);
                                 contactAdapter.add(contacts);
-                                //Toast.makeText(LeaderBoardActivity.this, usernameFetch + " " + scoreFetch , Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
@@ -88,14 +86,12 @@ public class LeaderBoardActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error connecting to database", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Error fetch data from database, check network connection", Toast.LENGTH_LONG).show();
                     }
                 });
         requestQueue.add(jsonObjectRequest);
 
 
-
     }
-
 
 }
