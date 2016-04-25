@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class MainMenu extends AppCompatActivity {
 
     TextView username, name, email, score, id;
-    Button settings;
+    Button leaderbaord, settings;
     UserSharedPrefHandler userSharedPrefHandler;
 
 
@@ -64,7 +64,6 @@ public class MainMenu extends AppCompatActivity {
 
 
         settings = (Button) findViewById(R.id.settings);
-
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +71,16 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(settingsIntent);
                 finish();
 
+            }
+        });
+
+        leaderbaord = (Button) findViewById(R.id.leaderBoard);
+        leaderbaord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(getApplicationContext(), LeaderBoardActivity.class);
+                startActivity(settingsIntent);
+                finish();
             }
         });
 

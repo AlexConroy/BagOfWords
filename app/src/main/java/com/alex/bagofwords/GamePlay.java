@@ -73,17 +73,9 @@ public class GamePlay extends AppCompatActivity {
         findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
 
+        Toast.makeText(getApplicationContext(), fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText(), Toast.LENGTH_LONG).show();
 
-/*
-        findViewById(R.id.targetDropOne).setOnDragListener(DropListner);
-        findViewById(R.id.targetDropTwo).setOnDragListener(DropListner);
-        findViewById(R.id.targetDropThree).setOnDragListener(DropListner);
-        findViewById(R.id.targetDropFour).setOnDragListener(DropListner);
 
-        targetOne = (Button) findViewById(R.id.targetDropOne);
-        targetTwo = (Button) findViewById(R.id.targetDropTwo);
-        targetThree = (Button) findViewById(R.id.targetDropThree);
-        targetFour = (Button) findViewById(R.id.targetDropFour);*/
 
         returnBtn = (Button) findViewById(R.id.returnBtn);
 
@@ -91,6 +83,7 @@ public class GamePlay extends AppCompatActivity {
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText(), Toast.LENGTH_LONG).show();
                // Toast.makeText(getApplicationContext(), " First Drop field text is: " + targetOne.getText().toString(), Toast.LENGTH_SHORT).show();
                // Toast.makeText(getApplicationContext(), " Second Drop field text is: " + targetTwo.getText().toString(), Toast.LENGTH_SHORT).show();
                // Toast.makeText(getApplicationContext(), " Third Drop field text is: " + targetThree.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -155,10 +148,12 @@ public class GamePlay extends AppCompatActivity {
                     break;
 
                 case DragEvent.ACTION_DROP:
-                    //log.i("");
+
                     Button target = (Button) v;
                     Button dragged = (Button) event.getLocalState();
+                    String targetInitialText = (String) target.getText();
                     target.setText(dragged.getText());
+                    dragged.setText(targetInitialText);
                     break;
             }
             return true;

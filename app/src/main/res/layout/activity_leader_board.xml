@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    tools:context="com.alex.bagofwords.SettingsActivity">
+    tools:context="com.alex.bagofwords.LeaderBoardActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -24,7 +24,7 @@
         <Button
             android:text="Leaderboard"
             android:id="@+id/leaderBoard"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAccent"
             android:textColor="#FFFFFF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         <Button
             android:text="@string/settings"
             android:id="@+id/settings"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimary"
             android:textColor="#FFFFFF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,34 +42,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/update_passwordBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-
-            android:text="Change Password"
-            android:textAllCaps="false"
-            android:gravity="left|center_vertical"/>
-
-        <Button
-            android:id="@+id/update_emailBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-
-            android:text="Change Email"
-            android:textAllCaps="false"
-            android:gravity="left|center_vertical"/>
-
-
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/listview"/>
 
 
 </LinearLayout>

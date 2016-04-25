@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    Button mainMenu;
+    Button mainMenu, leaderboard;
     Button updatePasswordBtn;
     Button updateEmailBtn;
     UserSharedPrefHandler userSharedPrefHandler;
@@ -27,15 +27,26 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        mainMenu = (Button) findViewById(R.id.mainMenu);
+
         updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
         updateEmailBtn = (Button) findViewById(R.id.update_emailBtn);
         userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
 
+        mainMenu = (Button) findViewById(R.id.mainMenu);
         mainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mainMenuIntent = new Intent(getApplicationContext(), MainMenu.class);
+                startActivity(mainMenuIntent);
+                finish();
+            }
+        });
+
+        leaderboard = (Button) findViewById(R.id.leaderBoard);
+        leaderboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainMenuIntent = new Intent(getApplicationContext(), LeaderBoardActivity.class);
                 startActivity(mainMenuIntent);
                 finish();
             }

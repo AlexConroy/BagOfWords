@@ -18,8 +18,17 @@
             android:textColor="#FFFFFF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight=".333" />
 
+
+        <Button
+            android:text="Leaderboard"
+            android:id="@+id/leaderBoard"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".333" />
 
         <Button
             android:text="@string/settings"
@@ -28,7 +37,7 @@
             android:textColor="#FFFFFF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight=".333" />
     </LinearLayout>
 
 
