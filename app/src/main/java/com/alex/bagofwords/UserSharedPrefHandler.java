@@ -6,15 +6,28 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class UserSharedPrefHandler {
 
     SharedPreferences sharedPref;
     Editor editor;
-    Context _context;
+    Context context;
     int PRIVATE_MODE = 0;
 
     private static  String PREFER_NAME = "BagofWordsSharedPref";
@@ -28,21 +41,11 @@ public class UserSharedPrefHandler {
     public static final String KEY_PASSWORD = "password";
 
     public UserSharedPrefHandler(Context context) {
-        this._context = context;
-        sharedPref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+        this.context = context;
+        sharedPref = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = sharedPref.edit();
     }
 
-    public void establishUserSession(String name, String username, String email) {
-        editor.putBoolean(IS_USER_LOGGEDIN, true);
-        editor.putString(KEY_ID, "null");
-        editor.putString(KEY_NAME, name);
-        editor.putString(KEY_USERNAME, username);
-        editor.putString(KEY_EMAIL, email);
-        editor.putString(KEY_SCORE, "null");
-        editor.putString(KEY_PASSWORD, "null");
-        editor.commit();
-    }
 
     public void establishUserSession(String id, String name, String username, String email, String score, String password) {
         editor.putBoolean(IS_USER_LOGGEDIN, true);
@@ -55,6 +58,7 @@ public class UserSharedPrefHandler {
         editor.commit();
     }
 
+
     public void setEmail(String email) {
         editor.putString(KEY_EMAIL, email);
         editor.commit();
@@ -65,12 +69,18 @@ public class UserSharedPrefHandler {
         editor.commit();
     }
 
+    public void updateScore(String newScore) {
+        editor.putString(KEY_SCORE, newScore);
+        editor.commit();
+        postUpdatedScore(getID(), newScore);
+    }
+
     public boolean checkLogin() {
         if(!this.isUserLoggedIn()) {
-            Intent intent = new Intent(_context, LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            _context.startActivity(intent);
+            context.startActivity(intent);
             return true;
         }
         return false;
@@ -80,10 +90,10 @@ public class UserSharedPrefHandler {
         editor.clear();
         editor.commit();
 
-        Intent intent = new Intent(_context, LoginActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        _context.startActivity(intent);
+        context.startActivity(intent);
     }
 
 
@@ -125,6 +135,53 @@ public class UserSharedPrefHandler {
 
     public boolean isUserLoggedIn() {
         return sharedPref.getBoolean(IS_USER_LOGGEDIN, false);
+    }
+
+
+    public void postUpdatedScore(final String userId, final String newScore) {
+
+        final String UPDATE_USER_SCORE = "http://www.bagofwords-ca400.com/webservice/UpdateUserScore.php";
+        final String KEY_USER_ID = "userId";
+        final String KEY_UPDATE_SCORE = "updateScore";
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPDATE_USER_SCORE,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Boolean success = jsonObject.getBoolean("successful");
+                            if (success) {
+                                Toast.makeText(context, "Updated user score", Toast.LENGTH_LONG).show();
+
+                            } else {
+                                Toast.makeText(context, "Error connecting to database!!", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Error connecting to database!!", Toast.LENGTH_LONG).show();
+                    }
+
+                }) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put(KEY_USER_ID, userId);
+                params.put(KEY_UPDATE_SCORE, newScore);
+                return params;
+
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
     }
 
 }

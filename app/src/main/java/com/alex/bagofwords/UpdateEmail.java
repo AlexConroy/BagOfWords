@@ -138,6 +138,7 @@ public class UpdateEmail extends AppCompatActivity {
     private void updateEmail(final String oldEmail, final String newEmail) {
 
         final UserSharedPrefHandler prefHandler = new UserSharedPrefHandler(getApplicationContext());
+        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest request;
 

@@ -32,12 +32,28 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/fetchTextView"
         android:layout_below="@+id/fetchBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:text="Test" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Score"
+        android:id="@+id/updateScoreBtn"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="52dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/updateScore"
+        android:layout_above="@+id/updateScoreBtn"
+        />
 
 </RelativeLayout>

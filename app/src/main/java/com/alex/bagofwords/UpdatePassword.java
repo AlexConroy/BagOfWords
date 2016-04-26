@@ -16,6 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ public class UpdatePassword extends AppCompatActivity {
     static final String PASSWORD_CHANGE_URL = "http://www.bagofwords-ca400.com/webservice/UpdatePassword.php";
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_NEW_Password = "newPassword";
+    UserSharedPrefHandler userSharedPrefHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,12 @@ public class UpdatePassword extends AppCompatActivity {
         comparePassword = (EditText) findViewById(R.id.compare_new_input_password);
         updatePasswordBtn = (Button) findViewById(R.id.update_password);
         mainMenu = (Button) findViewById(R.id.mainMenu);
+
+        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
+        final String currentPasswordDisplay = user.get(UserSharedPrefHandler.KEY_PASSWORD);
+        Toast.makeText(getApplicationContext(), "User password: " + currentPasswordDisplay, Toast.LENGTH_LONG).show();
+
 
         mainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,12 +128,25 @@ public class UpdatePassword extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.trim().equals("successful")) {
-                            Toast.makeText(getApplicationContext(), "Password Changed", Toast.LENGTH_LONG).show();
-                            prefHandler.setPassword(newPassword);
-                            Toast.makeText(getApplicationContext(), "Password changed from: " + userPassword, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Unsuccessful", Toast.LENGTH_LONG).show();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Boolean success = jsonObject.getBoolean("successful");
+                            if (success) {
+                                Toast.makeText(getApplicationContext(), "Password Changed", Toast.LENGTH_LONG).show();
+                                prefHandler.setPassword(newPassword);
+                                HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
+                                String test = user.get(UserSharedPrefHandler.KEY_PASSWORD);
+                                Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error connecting to database!!", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 },

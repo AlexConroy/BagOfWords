@@ -32,12 +32,12 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UpdatePassword" />
         <activity android:name=".UpdateEmail" />
-        <activity android:name=".GamePlay">
-        </activity>
-        <activity android:name=".TestFetch"></activity>
-        <activity android:name=".LeaderBoardActivity">
-
-        </activity>
+        <activity android:name=".NoviceGamePlay" />
+        <activity android:name=".TestFetch" />
+        <activity android:name=".LeaderBoardActivity" />
+        <activity android:name=".BeginnerGamePLay" />
+        <activity android:name=".IntermediateGamePlay" />
+        <activity android:name=".AdvancedGamePlay"></activity>
     </application>
 
 </manifest>

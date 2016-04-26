@@ -25,6 +25,10 @@ public class MainMenu extends AppCompatActivity {
     TextView username, name, email, score, id;
     Button leaderbaord, settings;
     UserSharedPrefHandler userSharedPrefHandler;
+    int userScore;
+
+    Button jumpActivity;
+    Button playGameBtn;
 
 
     @Override
@@ -85,10 +89,43 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
+        jumpActivity = (Button) findViewById(R.id.jumpBtn);
+        jumpActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent testFetchIntent = new Intent(getApplicationContext(), TestFetch.class);
+                startActivity(testFetchIntent);
+                finish();
+            }
+        });
+
+        userScore = Integer.parseInt(userSharedPrefHandler.getScore());
+        playGameBtn = (Button) findViewById(R.id.playGameBtn);
+        playGameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Userscore: " + userScore, Toast.LENGTH_SHORT).show();
+                selectGame(userScore);
+            }
+        });
+
+
         Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
 
+    }
 
+    public void selectGame(int score) {
+
+        if(score <= 15) {
+            Toast.makeText(getApplicationContext(), "Novice", Toast.LENGTH_LONG).show();
+        } else if(score > 16 && score <= 30) {
+            Toast.makeText(getApplicationContext(), "Beginner", Toast.LENGTH_LONG).show();
+        } else if(score > 30 && score <= 45) {
+            Toast.makeText(getApplicationContext(), "Intermediate", Toast.LENGTH_LONG).show();
+        } else if(score > 45) {
+            Toast.makeText(getApplicationContext(), "Advanced", Toast.LENGTH_LONG).show();
+        }
 
     }
 

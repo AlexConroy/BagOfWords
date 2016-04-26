@@ -10,23 +10,17 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
 
-
-
-public class GamePlay extends AppCompatActivity {
+public class NoviceGamePlay extends AppCompatActivity {
 
 
     Button fieldOne;
@@ -44,7 +38,7 @@ public class GamePlay extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_play);
+        setContentView(R.layout.activity_novice_game_play);
 
 
         if(!isNetworkAvailable(getApplicationContext())) {
@@ -169,7 +163,7 @@ public class GamePlay extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplicationContext(), "Yes", Toast.LENGTH_LONG).show();
-                //GamePlay.super.onBackPressed();
+                //NoviceGamePlay.super.onBackPressed();
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

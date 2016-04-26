@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,9 @@ public class TestFetch extends AppCompatActivity {
     TextView textView;
     Button button, buttonTest;
 
+    EditText updateScore;
+    Button updateScoreBtn;
+
     static final String FETCH_URL = "http://www.bagofwords-ca400.com/webservice/FetchNoviceWords.php";
 
 
@@ -30,8 +34,6 @@ public class TestFetch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_fetch);
-
-
 
         textView = (TextView) findViewById(R.id.fetchTextView);
         button = (Button) findViewById(R.id.fetchBtn);
@@ -64,6 +66,19 @@ public class TestFetch extends AppCompatActivity {
 
             }
         });
+
+
+        final UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+        updateScore = (EditText) findViewById(R.id.updateScore);
+        updateScoreBtn = (Button) findViewById(R.id.updateScoreBtn);
+
+        updateScoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userSharedPrefHandler.updateScore(updateScore.getText().toString());
+            }
+        });
+
 
     }
 

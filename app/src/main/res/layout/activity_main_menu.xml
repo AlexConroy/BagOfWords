@@ -193,159 +193,170 @@
 
     </RelativeLayout>
 
-
-
-
-
-<!--
-    <LinearLayout
-        android:id="@+id/usernameLayout"
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
+        android:text="Jump Activity"
+        android:id="@+id/jumpBtn"
+        android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:id="@+id/usernameText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:gravity="center_horizontal"
-            android:text="Username:" />
-
-        <TextView
-            android:id="@+id/username"
-            android:lay
-
-            out_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:text="" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:id="@+id/playGameBtn"
+        android:layout_gravity="center_horizontal" />
 
 
-    </LinearLayout>
-
-
+    <!--
         <LinearLayout
-            android:id="@+id/nameLayout"
+            android:id="@+id/usernameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/nameText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="Name:" />
+            <TextView
+                android:id="@+id/usernameText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:text="Username:" />
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="18dp"
-            android:layout_weight="1"
-            android:text="" />
+            <TextView
+                android:id="@+id/username"
+                android:lay
+
+                out_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:text="" />
 
 
         </LinearLayout>
 
 
+            <LinearLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="20dp">
 
-    <LinearLayout
-        android:id="@+id/emailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
+            <TextView
+                android:id="@+id/nameText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="Name:" />
 
-        <TextView
-            android:id="@+id/emailText"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="18dp"
+                android:layout_weight="1"
+                android:text="" />
+
+
+            </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/emailLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_weight="1"
-            android:text="Email:"
-            android:gravity="center_horizontal" />
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/email"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:layout_weight="1"
+                android:text="Email:"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="18dp"
+                android:layout_weight="1"
+                android:text="" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/scoreLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="18dp"
-            android:layout_weight="1"
-            android:text="" />
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/scoreText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:text="Score:" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:text="" />
+
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/scoreLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
-
-        <TextView
-            android:id="@+id/scoreText"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/idLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:gravity="center_horizontal"
-            android:text="Score:" />
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:text="" />
+            <TextView
+                android:id="@+id/idText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:text="ID:" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:text="" />
 
-
-    <LinearLayout
-        android:id="@+id/idLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
-
-        <TextView
-            android:id="@+id/idText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:gravity="center_horizontal"
-            android:text="ID:" />
-
-        <TextView
-            android:id="@+id/id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:text="" />
-
-    </LinearLayout>
--->
+        </LinearLayout>
+    -->
 
 </LinearLayout>
