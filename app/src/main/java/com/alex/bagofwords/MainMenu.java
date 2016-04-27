@@ -17,10 +17,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 
 public class MainMenu extends AppCompatActivity {
+
+
+    static final String FETCH_NOVICE_URL = "http://www.bagofwords-ca400.com/webservice/FetchNoviceWords.php";
 
     TextView username, name, email, score, id;
     Button leaderbaord, settings;
@@ -36,12 +50,7 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        if(!isNetworkAvailable(getApplicationContext())) {
-            deviceWifiSettings();
-        }
-
         userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-
         if(userSharedPrefHandler.checkLogin())
             finish();
 
@@ -52,7 +61,28 @@ public class MainMenu extends AppCompatActivity {
         String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
         String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
         String password = user.get(UserSharedPrefHandler.KEY_PASSWORD);
-        Toast.makeText(getApplication(), "Password is: " + password, Toast.LENGTH_LONG).show();
+        final int scoreToInt = Integer.parseInt(scoreSaved);
+
+        if(NoviceSentences.notEmpty()){
+            Toast.makeText(getApplicationContext(), "Not empty!", Toast.LENGTH_SHORT).show();
+            jumpActivity = (Button) findViewById(R.id.jumpBtn);
+            jumpActivity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectGame(scoreToInt);
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Fetching words", Toast.LENGTH_SHORT).show();
+            fetchWords(FETCH_NOVICE_URL);
+        }
+
+
+        if(!isNetworkAvailable(getApplicationContext())) {
+            deviceWifiSettings();
+        }
+
+        //Toast.makeText(getApplication(), "Password is: " + password, Toast.LENGTH_LONG).show();
 
         username = (TextView) findViewById(R.id.username);
         name = (TextView) findViewById(R.id.name);
@@ -66,18 +96,7 @@ public class MainMenu extends AppCompatActivity {
         score.setText(scoreSaved);
         id.setText(idSaved);
 
-
-        settings = (Button) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(settingsIntent);
-                finish();
-
-            }
-        });
-
+        // ------ Leaderboard Intent --------
         leaderbaord = (Button) findViewById(R.id.leaderBoard);
         leaderbaord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,15 +108,30 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
+        // ----- Settings Intent -------
+        settings = (Button) findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
+                finish();
+
+            }
+        });
+
+
+/*
         jumpActivity = (Button) findViewById(R.id.jumpBtn);
         jumpActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent testFetchIntent = new Intent(getApplicationContext(), TestFetch.class);
+                //Intent testFetchIntent = new Intent(getApplicationContext(), FetchSentences.class);
                 startActivity(testFetchIntent);
                 finish();
             }
-        });
+        });*/
 
         userScore = Integer.parseInt(userSharedPrefHandler.getScore());
         playGameBtn = (Button) findViewById(R.id.playGameBtn);
@@ -110,7 +144,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
 
-        Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
 
     }
@@ -119,6 +153,8 @@ public class MainMenu extends AppCompatActivity {
 
         if(score <= 15) {
             Toast.makeText(getApplicationContext(), "Novice", Toast.LENGTH_LONG).show();
+            Intent noviceGamePlay = new Intent(getApplicationContext(), NoviceGamePlay.class);
+            startActivity(noviceGamePlay);
         } else if(score > 16 && score <= 30) {
             Toast.makeText(getApplicationContext(), "Beginner", Toast.LENGTH_LONG).show();
         } else if(score > 30 && score <= 45) {
@@ -179,5 +215,44 @@ public class MainMenu extends AppCompatActivity {
         alertDialog.create().show();
 
     }
+
+    public void fetchWords(String url) {
+
+        final NoviceSentences sentencesNovice = new NoviceSentences();
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("novice");
+                            for(int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject novice = jsonArray.getJSONObject(i);
+                                String number = novice.getString("number");
+                                String first = novice.getString("first_word");
+                                String second = novice.getString("second_word");
+                                String third = novice.getString("third_word");
+                                String fourth = novice.getString("fourth_word");
+                                String sentence = first + " " + second + " " + third + " " + fourth;
+                                sentencesNovice.addSentence(sentence);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error connecting to database", Toast.LENGTH_LONG).show();
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
+
+    }
+
 
 }

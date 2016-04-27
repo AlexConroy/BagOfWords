@@ -103,7 +103,7 @@ public class UserSharedPrefHandler {
         user.put(KEY_NAME, sharedPref.getString(KEY_NAME, null));
         user.put(KEY_USERNAME, sharedPref.getString(KEY_USERNAME, null));
         user.put(KEY_EMAIL, sharedPref.getString(KEY_EMAIL, null));
-        user.put(KEY_SCORE, sharedPref.getString(KEY_SCORE, null));
+        user.put(KEY_SCORE, sharedPref.getString(KEY_SCORE, "0"));
         user.put(KEY_PASSWORD, sharedPref.getString(KEY_PASSWORD, null));
         return user;
     }

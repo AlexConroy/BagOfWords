@@ -1,6 +1,7 @@
 package com.alex.bagofwords;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
@@ -40,21 +42,26 @@ public class NoviceGamePlay extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novice_game_play);
 
+        String randomSentence = NoviceSentences.pickRandom();
+        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show();
+
+
+
 
         if(!isNetworkAvailable(getApplicationContext())) {
             deviceWifiSettings();
         }
 
-
+        String[] splitSentence = randomSentence.split("\\s+");
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
         fieldThree = (Button) findViewById(R.id.thirdBtn);
         fieldFour = (Button) findViewById(R.id.fourthBtn);
 
-        fieldOne.setText("First");
-        fieldTwo.setText("Second");
-        fieldThree.setText("Third");
-        fieldFour.setText("Fourth");
+        fieldOne.setText(splitSentence[0]);
+        fieldTwo.setText(splitSentence[1]);
+        fieldThree.setText(splitSentence[2]);
+        fieldFour.setText(splitSentence[3]);
 
 
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);

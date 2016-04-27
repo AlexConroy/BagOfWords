@@ -39,8 +39,13 @@ public class TestFetch extends AppCompatActivity {
         button = (Button) findViewById(R.id.fetchBtn);
         buttonTest = (Button) findViewById(R.id.test);
 
-        final FetchWords fetchWords = new FetchWords(this.getApplicationContext());
 
+        //NoviceSentences noviceSentences = new NoviceSentences();
+        if(NoviceSentences.notEmpty()) {
+            Toast.makeText(getApplicationContext(), "Not empty", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_LONG).show();
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,15 +59,17 @@ public class TestFetch extends AppCompatActivity {
         buttonTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Sentences sentences = new Sentences();
-                int num = Sentences.numberOfSentences();
+               // NoviceSentences sentences = new NoviceSentences();
+                int num = NoviceSentences.numberOfSentences();
+                String value = NoviceSentences.pickRandom();
 
-                for(int i = 0; i < num; i++) {
+                /*for(int i = 0; i < num; i++) {
                     String value = sentences.getSentence(i);
                     Toast.makeText(getApplicationContext(), "Sentence: " + value, Toast.LENGTH_LONG).show();
-                }
+                }*/
                 //int num = sentences.numberOfSentences();
                 Toast.makeText(getApplicationContext(), "Number of items is: " + num, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Random sentence: " + value, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -75,7 +82,12 @@ public class TestFetch extends AppCompatActivity {
         updateScoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userSharedPrefHandler.updateScore(updateScore.getText().toString());
+                //userSharedPrefHandler.updateScore(updateScore.getText().toString());
+                if(NoviceSentences.notEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Not empty", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -85,7 +97,7 @@ public class TestFetch extends AppCompatActivity {
 
     public void fetchWords() {
 
-        final Sentences sentencesNovice = new Sentences();
+        final NoviceSentences sentencesNovice = new NoviceSentences();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, FETCH_URL, null,
                 new Response.Listener<JSONObject>() {
@@ -102,6 +114,7 @@ public class TestFetch extends AppCompatActivity {
                                 String fourth = novice.getString("fourth_word");
                                 String sentence = first + " " + second + " " + third + " " + fourth;
                                 sentencesNovice.addSentence(sentence);
+                                //Toast.makeText(getApplicationContext(), "Sentence " + i + ": " + sentencesNovice.getSentence(i), Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {

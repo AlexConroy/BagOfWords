@@ -37,7 +37,8 @@
         <activity android:name=".LeaderBoardActivity" />
         <activity android:name=".BeginnerGamePLay" />
         <activity android:name=".IntermediateGamePlay" />
-        <activity android:name=".AdvancedGamePlay"></activity>
+        <activity android:name=".AdvancedGamePlay" />
+        <activity android:name=".FetchSentences"></activity>
     </application>
 
 </manifest>
