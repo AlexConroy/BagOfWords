@@ -2,11 +2,15 @@ package com.alex.bagofwords;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,14 +27,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
     Button fieldFour;
     Button fieldFive;
 
-
-    Button targetOne;
-    Button targetTwo;
-    Button targetThree;
-    Button targetFour;
-    Button targetFive;
-
-    Button returnBtn;
+    Button finishBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +39,6 @@ public class BeginnerGamePLay extends AppCompatActivity {
         fieldThree = (Button) findViewById(R.id.thirdBtn);
         fieldFour = (Button) findViewById(R.id.fourthBtn);
         fieldFive = (Button) findViewById(R.id.fifthBtn);
-
-        fieldOne.setText("First");
-        fieldTwo.setText("Second");
-        fieldThree.setText("Third");
-        fieldFour.setText("Fourth");
-        fieldFour.setText("Fifth");
-
 
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
         findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
@@ -62,13 +52,40 @@ public class BeginnerGamePLay extends AppCompatActivity {
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
         findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
 
+        final String randomSentence = Sentences.pickRandomBeginnerSentence(); // set random sentence
+        //Toast.makeText(getApplicationContext(), "Sentence: " + randomSentence, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
+        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
+
+        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
+
+        // populate shuffle words
+        fieldOne.setText(shuffleSentence[0]);
+        fieldTwo.setText(shuffleSentence[1]);
+        fieldThree.setText(shuffleSentence[2]);
+        fieldFour.setText(shuffleSentence[3]);
+        fieldFive.setText(shuffleSentence[4]);
+
+        finishBtn = (Button) findViewById(R.id.finishBtn);
+        finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                String userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString();
+                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
+                int score = Sentences.evaluate(randomSentence, userReturnedValue);
+                userSharedPrefHandler.updateScore(score);
+                Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
     View.OnLongClickListener longListen = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
 
             DragShadow dragShadow = new DragShadow(v);
-
 
             ClipData data = ClipData.newPlainText("","");
             v.startDrag(data, dragShadow, v, 0);
@@ -130,27 +147,6 @@ public class BeginnerGamePLay extends AppCompatActivity {
             return true;
         }
     };
-
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setMessage("Sure you wish to quit the game?");
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Yes", Toast.LENGTH_LONG).show();
-                //NoviceGamePlay.super.onBackPressed();
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
-            }
-        });
-        alertDialog.create().show();
-    }
 
 
 }

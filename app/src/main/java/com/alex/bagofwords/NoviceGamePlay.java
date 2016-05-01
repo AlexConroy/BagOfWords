@@ -1,7 +1,6 @@
 package com.alex.bagofwords;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,16 +22,10 @@ import android.widget.Toast;
 
 public class NoviceGamePlay extends AppCompatActivity {
 
-
     Button fieldOne;
     Button fieldTwo;
     Button fieldThree;
     Button fieldFour;
-
-    Button targetOne;
-    Button targetTwo;
-    Button targetThree;
-    Button targetFour;
 
     Button returnBtn;
 
@@ -42,26 +34,31 @@ public class NoviceGamePlay extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novice_game_play);
 
-        String randomSentence = NoviceSentences.pickRandom();
-        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Number of Novice: " + Sentences.numberOfNoviceSentences(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Number of Beginner: " + Sentences.numberOfBeginnerSentences(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Number of Intermediate: " + Sentences.numberOfIntermediateSentences(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Number of Advanced: " + Sentences.numberOfAdvancedSentences(), Toast.LENGTH_SHORT).show();
 
+        final String randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
+        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
+        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
 
-
+        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
 
         if(!isNetworkAvailable(getApplicationContext())) {
             deviceWifiSettings();
         }
 
-        String[] splitSentence = randomSentence.split("\\s+");
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
         fieldThree = (Button) findViewById(R.id.thirdBtn);
         fieldFour = (Button) findViewById(R.id.fourthBtn);
 
-        fieldOne.setText(splitSentence[0]);
-        fieldTwo.setText(splitSentence[1]);
-        fieldThree.setText(splitSentence[2]);
-        fieldFour.setText(splitSentence[3]);
+        // populate shuffle words
+        fieldOne.setText(shuffleSentence[0]);
+        fieldTwo.setText(shuffleSentence[1]);
+        fieldThree.setText(shuffleSentence[2]);
+        fieldFour.setText(shuffleSentence[3]);
 
 
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
@@ -74,24 +71,20 @@ public class NoviceGamePlay extends AppCompatActivity {
         findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
 
-        Toast.makeText(getApplicationContext(), fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText(), Toast.LENGTH_LONG).show();
-
 
 
         returnBtn = (Button) findViewById(R.id.returnBtn);
-
-
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText(), Toast.LENGTH_LONG).show();
-               // Toast.makeText(getApplicationContext(), " First Drop field text is: " + targetOne.getText().toString(), Toast.LENGTH_SHORT).show();
-               // Toast.makeText(getApplicationContext(), " Second Drop field text is: " + targetTwo.getText().toString(), Toast.LENGTH_SHORT).show();
-               // Toast.makeText(getApplicationContext(), " Third Drop field text is: " + targetThree.getText().toString(), Toast.LENGTH_SHORT).show();
-               // Toast.makeText(getApplicationContext(), " Fourth Drop field text is: " + targetFour.getText().toString(), Toast.LENGTH_SHORT).show();
+                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                String userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText();
+                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
+                int score = Sentences.evaluate(randomSentence, userReturnedValue);
+                userSharedPrefHandler.updateScore(score);
+                Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     View.OnLongClickListener longListen = new View.OnLongClickListener() {
@@ -169,14 +162,18 @@ public class NoviceGamePlay extends AppCompatActivity {
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Yes", Toast.LENGTH_LONG).show();
                 //NoviceGamePlay.super.onBackPressed();
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+                finish();
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                // Close alert dialog and do nothing
             }
         });
         alertDialog.create().show();
@@ -208,7 +205,5 @@ public class NoviceGamePlay extends AppCompatActivity {
         alertDialog.create().show();
 
     }
-
-
 
 }

@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Return"
-        android:id="@+id/returnBtn"
+        android:id="@+id/finishtn"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp" />
 

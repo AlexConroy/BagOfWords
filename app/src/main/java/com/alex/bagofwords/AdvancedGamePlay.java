@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class AdvancedGamePlay extends AppCompatActivity {
 
@@ -52,6 +53,21 @@ public class AdvancedGamePlay extends AppCompatActivity {
         findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
         findViewById(R.id.sixthBtn).setOnDragListener(DropListner);
         findViewById(R.id.seventhBtn).setOnDragListener(DropListner);
+
+        final String randomSentence = Sentences.pickRandomIAdvancedSentence(); // set random sentence
+        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
+        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
+
+        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
+
+        // populate shuffle words
+        fieldOne.setText(shuffleSentence[0]);
+        fieldTwo.setText(shuffleSentence[1]);
+        fieldThree.setText(shuffleSentence[2]);
+        fieldFour.setText(shuffleSentence[3]);
+        fieldFive.setText(shuffleSentence[4]);
+        fieldSix.setText(shuffleSentence[5]);
+        fieldSeven.setText(shuffleSentence[6]);
 
     }
 

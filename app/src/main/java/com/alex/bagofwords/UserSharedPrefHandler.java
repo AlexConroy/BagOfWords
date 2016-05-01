@@ -69,10 +69,18 @@ public class UserSharedPrefHandler {
         editor.commit();
     }
 
-    public void updateScore(String newScore) {
-        editor.putString(KEY_SCORE, newScore);
+    public void updateScore(int updateScore) {
+        int currentScore = 0;
+        try {
+            currentScore = Integer.parseInt(getScore());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        int newScore = currentScore + updateScore;
+        String score = String.valueOf(newScore);
+        editor.putString(KEY_SCORE, score);
         editor.commit();
-        postUpdatedScore(getID(), newScore);
+        postUpdatedScore(getID(), score);
     }
 
     public boolean checkLogin() {
@@ -126,7 +134,7 @@ public class UserSharedPrefHandler {
     }
 
     public String getScore() {
-        return sharedPref.getString(KEY_SCORE, "empty");
+        return sharedPref.getString(KEY_SCORE, "0");
     }
 
     public String getPassword() {

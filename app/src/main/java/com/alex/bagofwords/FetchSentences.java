@@ -1,6 +1,5 @@
 package com.alex.bagofwords;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class FetchSentences extends AppCompatActivity {
 
@@ -49,8 +46,8 @@ public class FetchSentences extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NoviceSentences noviceSen = new NoviceSentences();
-                int num = NoviceSentences.numberOfSentences();
+                Sentences noviceSen = new Sentences();
+                int num = Sentences.numberOfNoviceSentences();
                 Toast.makeText(getApplicationContext(), num, Toast.LENGTH_SHORT).show();
             }
         });
@@ -62,7 +59,7 @@ public class FetchSentences extends AppCompatActivity {
 
         public void fetchWords() {
 
-            final NoviceSentences noviceSentence = new NoviceSentences();
+            final Sentences noviceSentences = new Sentences();
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -80,7 +77,7 @@ public class FetchSentences extends AppCompatActivity {
                                     String third = novice.getString("third_word");
                                     String fourth = novice.getString("fourth_word");
                                     String word = first + " " + second + " " + third + " " + fourth;
-                                    noviceSentence.addSentence(word);
+                                    noviceSentences.addNoviceSentence(word);
                                     Toast.makeText(getApplicationContext(), word, Toast.LENGTH_SHORT).show();
                                     //textView.append(first+ " " + second + " " + third + " " + fourth);
                                 }
