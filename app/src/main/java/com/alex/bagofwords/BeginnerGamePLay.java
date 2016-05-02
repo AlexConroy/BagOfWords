@@ -29,6 +29,11 @@ public class BeginnerGamePLay extends AppCompatActivity {
 
     Button finishBtn;
 
+    String randomSentence;
+    String userReturnedValue;
+    int score;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
         findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
 
-        final String randomSentence = Sentences.pickRandomBeginnerSentence(); // set random sentence
+        randomSentence = Sentences.pickRandomBeginnerSentence(); // set random sentence
         //Toast.makeText(getApplicationContext(), "Sentence: " + randomSentence, Toast.LENGTH_SHORT).show();
         Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
@@ -71,11 +76,12 @@ public class BeginnerGamePLay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-                String userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString();
-                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
-                int score = Sentences.evaluate(randomSentence, userReturnedValue);
+                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString();
+                //Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
+                score = Sentences.evaluate(randomSentence, userReturnedValue);
                 userSharedPrefHandler.updateScore(score);
-                Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+                showDialog(v);
+                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -147,6 +153,16 @@ public class BeginnerGamePLay extends AppCompatActivity {
             return true;
         }
     };
+
+    public void showDialog(View view) {
+        Bundle passData = new Bundle();
+        passData.putString("correctSentence", randomSentence);
+        passData.putString("userSentence", userReturnedValue);
+        passData.putInt("score", score);
+        DisplayDialog dialog = new DisplayDialog();
+        dialog.setArguments(passData);
+        dialog.show(getFragmentManager(), "My Dialog");
+    }
 
 
 }

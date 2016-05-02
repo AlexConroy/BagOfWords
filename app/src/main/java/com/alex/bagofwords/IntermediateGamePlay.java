@@ -25,7 +25,12 @@ public class IntermediateGamePlay extends AppCompatActivity {
     Button fieldFive;
     Button fieldSix;
 
-    Button returnBtn;
+    Button finishBtn;
+
+    String randomSentence;
+    String userReturnedValue;
+    int score;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,8 @@ public class IntermediateGamePlay extends AppCompatActivity {
         findViewById(R.id.sixthBtn).setOnDragListener(DropListner);
 
 
-        final String randomSentence = Sentences.pickRandomIntermediateSentence(); // set random sentence
-        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
+        randomSentence = Sentences.pickRandomIntermediateSentence(); // set random sentence
+        //Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
 
         final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
@@ -68,7 +73,24 @@ public class IntermediateGamePlay extends AppCompatActivity {
         fieldFive.setText(shuffleSentence[4]);
         fieldSix.setText(shuffleSentence[5]);
 
+        finishBtn = (Button) findViewById(R.id.finishBtn);
+        finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString() + " " + fieldSix.getText().toString();
+                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
+                score = Sentences.evaluate(randomSentence, userReturnedValue);
+                userSharedPrefHandler.updateScore(score);
+                showDialog(v);
+                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
+
+
+
 
     View.OnLongClickListener longListen = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
@@ -156,6 +178,16 @@ public class IntermediateGamePlay extends AppCompatActivity {
             }
         });
         alertDialog.create().show();
+    }
+
+    public void showDialog(View view) {
+        Bundle passData = new Bundle();
+        passData.putString("correctSentence", randomSentence);
+        passData.putString("userSentence", userReturnedValue);
+        passData.putInt("score", score);
+        DisplayDialog dialog = new DisplayDialog();
+        dialog.setArguments(passData);
+        dialog.show(getFragmentManager(), "My Dialog");
     }
 
 }

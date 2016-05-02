@@ -11,35 +11,51 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+
+
 public class NoviceGamePlay extends AppCompatActivity {
+
+    TextView timer;
+    final long startTime = 10 * 1000;
+    final long intervals = 1000;
+    int completionTime;
+    GameCountDownTimer countDownTimer;
 
     Button fieldOne;
     Button fieldTwo;
     Button fieldThree;
     Button fieldFour;
 
-    Button returnBtn;
+    Button finishBtn;
+
+    String randomSentence;
+    String userReturnedValue;
+    int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novice_game_play);
 
-        Toast.makeText(getApplicationContext(), "Number of Novice: " + Sentences.numberOfNoviceSentences(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "Number of Beginner: " + Sentences.numberOfBeginnerSentences(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "Number of Intermediate: " + Sentences.numberOfIntermediateSentences(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "Number of Advanced: " + Sentences.numberOfAdvancedSentences(), Toast.LENGTH_SHORT).show();
+        timer = (TextView) findViewById(R.id.timer);
+        countDownTimer = new GameCountDownTimer(startTime, intervals);
+        countDownTimer.start();
 
-        final String randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
+
+        randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
         Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
 
@@ -60,7 +76,6 @@ public class NoviceGamePlay extends AppCompatActivity {
         fieldThree.setText(shuffleSentence[2]);
         fieldFour.setText(shuffleSentence[3]);
 
-
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
         findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
         findViewById(R.id.thirdBtn).setOnLongClickListener(longListen);
@@ -71,27 +86,31 @@ public class NoviceGamePlay extends AppCompatActivity {
         findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
 
-
-
-        returnBtn = (Button) findViewById(R.id.returnBtn);
-        returnBtn.setOnClickListener(new View.OnClickListener() {
+        finishBtn = (Button) findViewById(R.id.finishBtn);
+        finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                countDownTimer.cancel();
+                completionTime = countDownTimer.completionTime();
                 UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-                String userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText();
-                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
-                int score = Sentences.evaluate(randomSentence, userReturnedValue);
+                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText();
+                //Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
+                score = Sentences.evaluate(randomSentence, userReturnedValue);
                 userSharedPrefHandler.updateScore(score);
-                Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+                showDialog(v);
+
             }
         });
+
+        //int get = countDownTimer.getCount();
+
     }
 
     View.OnLongClickListener longListen = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
 
             DragShadow dragShadow = new DragShadow(v);
-
 
             ClipData data = ClipData.newPlainText("","");
             v.startDrag(data, dragShadow, v, 0);
@@ -206,4 +225,42 @@ public class NoviceGamePlay extends AppCompatActivity {
 
     }
 
+    public void showDialog(View view) {
+        Bundle passData = new Bundle();
+        passData.putString("correctSentence", randomSentence);
+        passData.putString("userSentence", userReturnedValue);
+        passData.putInt("score", score);
+        passData.putInt("time", completionTime);
+        DisplayDialog dialog = new DisplayDialog();
+        dialog.setArguments(passData);
+        dialog.show(getFragmentManager(), "My Dialog");
+    }
+
+    public class GameCountDownTimer extends CountDownTimer {
+
+        private int timeCount;
+
+        public GameCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            timer.setText("Time's Up!!");
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            timer.setText(Long.toString(millisUntilFinished/1000));
+            timeCount++;
+            Log.d("Timer", Integer.toString(timeCount));
+        }
+
+        public int completionTime() {
+            return timeCount;
+        }
+    }
+
 }
+
+

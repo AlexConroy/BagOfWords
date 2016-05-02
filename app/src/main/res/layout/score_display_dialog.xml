@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Correct Sentence:"
+        android:id="@+id/correctSentenceText"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="italic"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayCorrectSentnce"
+        android:text="NULL"
+        android:layout_below="@+id/correctSentenceText"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Sentence:"
+        android:id="@+id/userSentenceText"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="italic"
+        android:layout_below="@+id/displayCorrectSentnce"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayUserSentence"
+        android:text="Null"
+        android:layout_below="@+id/userSentenceText"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Matched Words:"
+        android:id="@+id/scoreText"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="italic"
+        android:layout_below="@+id/displayUserSentence"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userScore"
+        android:text="Null"
+        android:layout_below="@+id/scoreText"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeText"
+        android:text="Seconds Completed:"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignTop="@+id/scoreText"
+        android:layout_toRightOf="@+id/scoreText"
+        android:layout_toEndOf="@+id/scoreText"
+        android:layout_marginLeft="58dp"
+        android:layout_marginStart="58dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        android:text="Null"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignTop="@+id/userScore"
+        android:layout_alignLeft="@+id/timeText"
+        android:layout_alignStart="@+id/timeText" />
+
+</RelativeLayout>
