@@ -32,13 +32,21 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UpdatePassword" />
         <activity android:name=".UpdateEmail" />
-        <activity android:name=".NoviceGamePlay" />
         <activity android:name=".TestFetch" />
         <activity android:name=".LeaderBoardActivity" />
-        <activity android:name=".BeginnerGamePLay" />
-        <activity android:name=".IntermediateGamePlay" />
-        <activity android:name=".AdvancedGamePlay" />
-        <activity android:name=".FetchSentences"></activity>
+        <activity android:name=".NoviceGamePlay"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".BeginnerGamePLay"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".IntermediateGamePlay"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".AdvancedGamePlay"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".FetchSentences"/>
     </application>
 
 </manifest>

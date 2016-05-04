@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import static java.lang.Math.*;
 
 public class Sentences {
 
@@ -142,6 +143,10 @@ public class Sentences {
             }
         }
         return score;
+    }
+
+    public static int gameScore(int matches, int timeRemaining) {
+        return (int) (pow(matches, 2) * timeRemaining);
     }
 
 

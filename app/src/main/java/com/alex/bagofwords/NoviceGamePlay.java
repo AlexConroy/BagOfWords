@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import static android.app.AlertDialog.*;
 
 
 public class NoviceGamePlay extends AppCompatActivity {
@@ -32,6 +32,7 @@ public class NoviceGamePlay extends AppCompatActivity {
     final long startTime = 10 * 1000;
     final long intervals = 1000;
     int completionTime;
+    int count;
     GameCountDownTimer countDownTimer;
 
     Button fieldOne;
@@ -43,7 +44,9 @@ public class NoviceGamePlay extends AppCompatActivity {
 
     String randomSentence;
     String userReturnedValue;
+    int matches;
     int score;
+    int resume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,18 +95,18 @@ public class NoviceGamePlay extends AppCompatActivity {
             public void onClick(View v) {
                 countDownTimer.cancel();
                 completionTime = countDownTimer.completionTime();
+                count = countDownTimer.timeRemaining();
                 UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
                 userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText();
-                //Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
-                score = Sentences.evaluate(randomSentence, userReturnedValue);
+                matches = Sentences.evaluate(randomSentence, userReturnedValue);
+                score = Sentences.gameScore(matches, count);
+                countDownTimer.cancel();
                 userSharedPrefHandler.updateScore(score);
-                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
                 showDialog(v);
 
             }
         });
 
-        //int get = countDownTimer.getCount();
 
     }
 
@@ -173,30 +176,39 @@ public class NoviceGamePlay extends AppCompatActivity {
         }
     };
 
+    boolean backButtonPressed = false;
+
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setMessage("Sure you wish to quit the game?");
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //NoviceGamePlay.super.onBackPressed();
-                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-                finish();
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Close alert dialog and do nothing
-            }
-        });
-        alertDialog.create().show();
+        Builder alertDialog = new Builder(this);
+        if (!backButtonPressed) {
+           // countDownTimer.cancel();
+           // final int resume = countDownTimer.timeRemaining();
+            alertDialog.setMessage("Sure you wish to quit the game?");
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //NoviceGamePlay.super.onBackPressed();
+                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                    finish();
+                }
+            });
+            alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //GameCountDownTimer resumeTimer = new GameCountDownTimer(resume * 1000, 1000);
+                   // countDownTimer = new GameCountDownTimer(1000, intervals);
+                   // countDownTimer.start();
+                }
+            });
+            alertDialog.create().show();
+        }
     }
+
 
 
     public boolean isNetworkAvailable(final Context context) {
@@ -205,7 +217,7 @@ public class NoviceGamePlay extends AppCompatActivity {
     }
 
     public void deviceWifiSettings() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        Builder alertDialog = new Builder(this);
         alertDialog.setTitle("No Internet Connection");
         alertDialog.setMessage("Check network settings");
         alertDialog.setCancelable(false);
@@ -229,8 +241,9 @@ public class NoviceGamePlay extends AppCompatActivity {
         Bundle passData = new Bundle();
         passData.putString("correctSentence", randomSentence);
         passData.putString("userSentence", userReturnedValue);
-        passData.putInt("score", score);
+        passData.putInt("matches", matches);
         passData.putInt("time", completionTime);
+        passData.putInt("score", score);
         DisplayDialog dialog = new DisplayDialog();
         dialog.setArguments(passData);
         dialog.show(getFragmentManager(), "My Dialog");
@@ -238,11 +251,15 @@ public class NoviceGamePlay extends AppCompatActivity {
 
     public class GameCountDownTimer extends CountDownTimer {
 
-        private int timeCount;
+        private int completionCount;
+        private int countDown;
 
         public GameCountDownTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
+            //super(millisInFuture, countDownInterval);
+            super(10000, 1000);
+            countDown = (int) (millisInFuture/1000);
         }
+
 
         @Override
         public void onFinish() {
@@ -252,13 +269,20 @@ public class NoviceGamePlay extends AppCompatActivity {
         @Override
         public void onTick(long millisUntilFinished) {
             timer.setText(Long.toString(millisUntilFinished/1000));
-            timeCount++;
-            Log.d("Timer", Integer.toString(timeCount));
+            completionCount++;
+            countDown--;
+            Log.d("Timer", Integer.toString(completionCount));
         }
 
         public int completionTime() {
-            return timeCount;
+            return completionCount;
         }
+
+        public int timeRemaining() {
+            return countDown;
+        }
+
+
     }
 
 }

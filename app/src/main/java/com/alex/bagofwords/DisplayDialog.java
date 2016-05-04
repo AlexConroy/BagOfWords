@@ -17,11 +17,6 @@ import org.w3c.dom.Text;
 
 public class DisplayDialog extends DialogFragment{
 
-    TextView correctSentenceTextView;
-    TextView userSentenceTextView;
-    TextView scoreTextView;
-
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -30,19 +25,22 @@ public class DisplayDialog extends DialogFragment{
         View view = inflater.inflate(R.layout.score_display_dialog, null);
         TextView correctSentenceTextView = (TextView) view.findViewById(R.id.displayCorrectSentnce);
         TextView userSentenceTextView = (TextView) view.findViewById(R.id.displayUserSentence);
-        TextView scoreTextView = (TextView) view.findViewById(R.id.userScore);
-        TextView completionTime = (TextView) view.findViewById(R.id.time);
+        TextView matchedTextView = (TextView) view.findViewById(R.id.userMatches);
+        TextView completionTimeTextView = (TextView) view.findViewById(R.id.time);
+        TextView scoreTextView = (TextView) view.findViewById(R.id.score);
 
         Bundle getSentence = getArguments();
         String correctSentence = getSentence.getString("correctSentence");
         String userSentence = getSentence.getString("userSentence");
-        int userScore = getSentence.getInt("score");
+        int matches = getSentence.getInt("matches");
         int userTime = getSentence.getInt("time");
+        int score = getSentence.getInt("score");
 
         correctSentenceTextView.setText(correctSentence);
         userSentenceTextView.setText(userSentence);
-        scoreTextView.setText(Integer.toString(userScore));
-        completionTime.setText(Integer.toString(userTime));
+        matchedTextView.setText(Integer.toString(matches));
+        completionTimeTextView.setText(Integer.toString(userTime));
+        scoreTextView.setText(Integer.toString(score));
 
         builder.setView(view);
         setCancelable(false);

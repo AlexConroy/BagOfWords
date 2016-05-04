@@ -70,17 +70,22 @@ public class UserSharedPrefHandler {
     }
 
     public void updateScore(int updateScore) {
-        int currentScore = 0;
-        try {
-            currentScore = Integer.parseInt(getScore());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        if (updateScore > 0) {
+            Log.d("Prefernce", "Updated score");
+            int currentScore = 0;
+            try {
+                currentScore = Integer.parseInt(getScore());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            int newScore = currentScore + updateScore;
+            String score = String.valueOf(newScore);
+            editor.putString(KEY_SCORE, score);
+            editor.commit();
+            postUpdatedScore(getID(), score);
+        } else {
+            Log.d("Prefernce", "Didn't update score");
         }
-        int newScore = currentScore + updateScore;
-        String score = String.valueOf(newScore);
-        editor.putString(KEY_SCORE, score);
-        editor.commit();
-        postUpdatedScore(getID(), score);
     }
 
     public boolean checkLogin() {
@@ -161,10 +166,12 @@ public class UserSharedPrefHandler {
                             JSONObject jsonObject = new JSONObject(response);
                             Boolean success = jsonObject.getBoolean("successful");
                             if (success) {
-                                Toast.makeText(context, "Updated user score", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(context, "Updated user score", Toast.LENGTH_LONG).show();
+                                Log.d("UserSharedPrefHandler", "Updated remote user score");
 
                             } else {
                                 Toast.makeText(context, "Error connecting to database!!", Toast.LENGTH_LONG).show();
+                                Log.d("UserSharedPrefHandler", "Error updating remote user score");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

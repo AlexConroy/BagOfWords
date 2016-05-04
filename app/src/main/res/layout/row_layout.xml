@@ -5,7 +5,7 @@
     android:layout_height="35dp">
 
     <TextView
-        android:layout_width="120dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
         android:id="@+id/tx_number"
         android:layout_alignParentLeft="true"
@@ -14,16 +14,18 @@
         android:textAppearance="?android:textAppearanceLarge"/>
 
     <TextView
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:id="@+id/tx_username"
         android:layout_toRightOf="@+id/tx_number"
         android:text="Username"
         android:gravity="center"
+        android:lines="1"
+        android:ellipsize="end"
         android:textAppearance="?android:textAppearanceLarge"/>
 
     <TextView
-        android:layout_width="120dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
         android:id="@+id/tx_score"
         android:layout_toRightOf="@+id/tx_username"

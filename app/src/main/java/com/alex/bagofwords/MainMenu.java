@@ -120,20 +120,16 @@ public class MainMenu extends AppCompatActivity {
 
     public void selectGame(int score) {
 
-        if(score <= 15) {
-            //Toast.makeText(getApplicationContext(), "Novice", Toast.LENGTH_LONG).show();
+        if(score < 500) {
             Intent noviceGamePlay = new Intent(getApplicationContext(), NoviceGamePlay.class);
             startActivity(noviceGamePlay);
-        } else if(score >= 16 && score <= 30) {
-            //Toast.makeText(getApplicationContext(), "Beginner", Toast.LENGTH_LONG).show();
+        } else if(score >= 500 && score < 1000) {
             Intent beginnerGamePlay = new Intent(getApplicationContext(), BeginnerGamePLay.class);
             startActivity(beginnerGamePlay);
-        } else if(score >= 31 && score <= 45) {
-            //Toast.makeText(getApplicationContext(), "Intermediate", Toast.LENGTH_LONG).show();
+        } else if(score >= 1000 && score < 1500) {
             Intent intermediateGamePlay = new Intent(getApplicationContext(), IntermediateGamePlay.class);
             startActivity(intermediateGamePlay);
-        } else if(score >= 46) {
-            //Toast.makeText(getApplicationContext(), "Advanced", Toast.LENGTH_LONG).show();
+        } else if(score >= 1500) {
             Intent advanceGamePlay = new Intent(getApplicationContext(), AdvancedGamePlay.class);
             startActivity(advanceGamePlay);
         }
