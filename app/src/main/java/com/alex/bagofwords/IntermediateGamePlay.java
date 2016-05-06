@@ -2,21 +2,32 @@ package com.alex.bagofwords;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class IntermediateGamePlay extends AppCompatActivity {
 
+    TextView timerTextView;
+    final long startTime = 17 * 1000;
+    final long intervals = 1000;
+    int completionTime;
+    int count;
+    GameCountDownTimer timer;
 
     Button fieldOne;
     Button fieldTwo;
@@ -26,6 +37,8 @@ public class IntermediateGamePlay extends AppCompatActivity {
     Button fieldSix;
     Button fieldSeven;
     Button finishBtn;
+
+    final String puncutuationMissing = "#ff4d4d";
 
     String randomSentence;
     String userReturnedValue;
@@ -37,6 +50,14 @@ public class IntermediateGamePlay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intermediate_game_play);
+
+        timerTextView = (TextView) findViewById(R.id.timer);
+        timer = new GameCountDownTimer(startTime, intervals);
+        timer.start();
+
+        randomSentence = Sentences.pickRandomIntermediateSentence();
+        final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)");
+        final String shuffledSentence[] = Sentences.shuffleArraySentence(initialSplit);
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
@@ -60,20 +81,37 @@ public class IntermediateGamePlay extends AppCompatActivity {
         findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
         findViewById(R.id.sixthBtn).setOnDragListener(DropListner);
 
-        /*
+
         // populate shuffle words
-        fieldOne.setText(shuffleSentence[0]);
-        fieldTwo.setText(shuffleSentence[1]);
-        fieldThree.setText(shuffleSentence[2]);
-        fieldFour.setText(shuffleSentence[3]);
-        fieldFive.setText(shuffleSentence[4]);
-        fieldSix.setText(shuffleSentence[5]);*/
+        fieldOne.setText(shuffledSentence[0]);
+        fieldTwo.setText(shuffledSentence[1]);
+        fieldThree.setText(shuffledSentence[2]);
+        fieldFour.setText(shuffledSentence[3]);
+        fieldFive.setText(shuffledSentence[4]);
+        fieldSix.setText(shuffledSentence[5]);
 
         finishBtn = (Button) findViewById(R.id.finishBtn);
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(punctuationFieldEmpty()) {
+                    timer.cancel();
+                    completionTime = timer.completionTime();
+                    count = timer.timeRemaining();
+                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + " " + fieldSix.getText() + fieldSeven.getText();
+                   // Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
+                    matches = Sentences.evaluate(randomSentence, userReturnedValue);
+                    score = Sentences.gameScore(matches, count);
+                    userSharedPrefHandler.updateScore(score);
+                    showDialog(v);
 
+                } else {
+                    fieldSeven.setBackgroundColor(Color.parseColor(puncutuationMissing));
+                    Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
+                    Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    punctuationMissing.vibrate(200);
+                }
             }
         });
 
@@ -149,35 +187,108 @@ public class IntermediateGamePlay extends AppCompatActivity {
         }
     };
 
+    public void fullStopOnClick(View view) {
+        Button fullStop = (Button) view;
+        fieldSeven.setText(fullStop.getText());
+        Log.d("Punctuation", "Full stop pressed!");
+    }
+
+    public void questionMarkOnClick(View view) {
+        Button questionMark = (Button) view;
+        fieldSeven.setText(questionMark.getText());
+        Log.d("Punctuation", "Question mark pressed!");
+    }
+
+    public void exclamationMarkOnClick(View view) {
+        Button exclamationMark = (Button) view;
+        fieldSeven.setText(exclamationMark.getText());
+        Log.d("Punctuation", "Exclamation mark pressed!");
+    }
+
+    public boolean punctuationFieldEmpty() {
+        if(fieldSeven.getText().equals("")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("Sure you wish to quit the game?");
         alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Yes", Toast.LENGTH_LONG).show();
                 //NoviceGamePlay.super.onBackPressed();
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+                finish();
             }
         });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+
             }
         });
         alertDialog.create().show();
     }
 
+
     public void showDialog(View view) {
         Bundle passData = new Bundle();
         passData.putString("correctSentence", randomSentence);
         passData.putString("userSentence", userReturnedValue);
+        passData.putInt("matches", matches);
+        passData.putInt("time", completionTime);
         passData.putInt("score", score);
         RoundStats dialog = new RoundStats();
         dialog.setArguments(passData);
         dialog.show(getFragmentManager(), "My Dialog");
+    }
+
+
+    public class GameCountDownTimer extends CountDownTimer {
+
+        private int completionCount;
+        private int countDown;
+
+        public GameCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+            countDown = (int) (millisInFuture/1000);
+
+        }
+
+
+        @Override
+        public void onFinish() {
+            TimesUp dialog = new TimesUp();
+            dialog.show(getFragmentManager(), "Out of Time");
+            Vibrator onTimeFinished = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+            onTimeFinished.vibrate(350);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            timerTextView.setText(Long.toString(millisUntilFinished/1000));
+            completionCount++;
+            countDown--;
+            Log.d("Timer", Integer.toString(completionCount));
+        }
+
+        public int completionTime() {
+            return completionCount;
+        }
+
+        public int timeRemaining() {
+            return countDown;
+        }
+
     }
 
 }

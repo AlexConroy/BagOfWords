@@ -31,10 +31,10 @@
         android:layout_gravity="center_horizontal">
 
         <Button
-            android:layout_width="160dp"
-            android:layout_height="32dp"
             android:text=""
             android:id="@+id/firstBtn"
+            android:layout_width="160dp"
+            android:layout_height="32dp"
             android:layout_marginBottom="6dp"
             android:background="#485665"
             android:textColor="#ffffff"
@@ -123,6 +123,7 @@
             android:layout_gravity="center_horizontal" />
 
     </GridLayout>
+
     <GridLayout
         android:id="@+id/punctuationMarks"
         android:layout_width="wrap_content"

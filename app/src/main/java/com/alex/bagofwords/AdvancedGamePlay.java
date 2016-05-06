@@ -1,19 +1,33 @@
 package com.alex.bagofwords;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AdvancedGamePlay extends AppCompatActivity {
+
+    TextView timerTextView;
+    final long startTime = 17 * 1000;
+    final long interval = 1000;
+    int completionTime;
+    int count;
+    GameCountDownTimer timer;
 
     Button fieldOne;
     Button fieldTwo;
@@ -22,11 +36,14 @@ public class AdvancedGamePlay extends AppCompatActivity {
     Button fieldFive;
     Button fieldSix;
     Button fieldSeven;
-
+    Button fieldEight;
     Button finishBtn;
+
+    final String puncutuationMissing = "#ff4d4d";
 
     String randomSentence;
     String userReturnedValue;
+    int matches;
     int score;
 
 
@@ -35,6 +52,10 @@ public class AdvancedGamePlay extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_game_play);
 
+        timerTextView = (TextView) findViewById(R.id.timer);
+        timer = new GameCountDownTimer(startTime, interval);
+        timer.start();
+
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
         fieldThree = (Button) findViewById(R.id.thirdBtn);
@@ -42,6 +63,7 @@ public class AdvancedGamePlay extends AppCompatActivity {
         fieldFive = (Button) findViewById(R.id.fifthBtn);
         fieldSix = (Button) findViewById(R.id.sixthBtn);
         fieldSeven = (Button) findViewById(R.id.seventhBtn);
+        fieldEight = (Button) findViewById(R.id.eighthBtn);
 
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
         findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
@@ -60,9 +82,8 @@ public class AdvancedGamePlay extends AppCompatActivity {
         findViewById(R.id.seventhBtn).setOnDragListener(DropListner);
 
         randomSentence = Sentences.pickRandomAdvancedSentence(); // set random sentence
-        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
-        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
-
+        //Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
+        final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
         final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
 
         // populate shuffle words
@@ -78,17 +99,28 @@ public class AdvancedGamePlay extends AppCompatActivity {
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString() + " " + fieldSix.getText().toString() + " " + fieldSeven.getText().toString();
-                //Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
-                score = Sentences.evaluate(randomSentence, userReturnedValue);
-                userSharedPrefHandler.updateScore(score);
-                showDialog(v);
-                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+                if(punctuationFieldEmpty()) {
+                    timer.cancel();
+                    completionTime = timer.completionTime();
+                    count = timer.timeRemaining();
+                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + " " + fieldSix.getText() + " " + fieldSeven.getText() + fieldEight.getText();
+                    matches = Sentences.evaluate(randomSentence, userReturnedValue);
+                    score = Sentences.gameScore(matches, count);
+                    userSharedPrefHandler.updateScore(score);
+                    showDialog(v);
+
+                } else {
+                    fieldEight.setBackgroundColor(Color.parseColor(puncutuationMissing));
+                    Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
+                    Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    punctuationMissing.vibrate(200);
+                }
             }
         });
 
     }
+
 
     View.OnLongClickListener longListen = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
@@ -157,14 +189,109 @@ public class AdvancedGamePlay extends AppCompatActivity {
         }
     };
 
+    public void fullStopOnClick(View view) {
+        Button fullStop = (Button) view;
+        fieldEight.setText(fullStop.getText());
+        Log.d("Punctuation", "Full stop pressed!");
+    }
+
+    public void questionMarkOnClick(View view) {
+        Button questionMark = (Button) view;
+        fieldEight.setText(questionMark.getText());
+        Log.d("Punctuation", "Question mark pressed!");
+    }
+
+    public void exclamationMarkOnClick(View view) {
+        Button exclamationMark = (Button) view;
+        fieldEight.setText(exclamationMark.getText());
+        Log.d("Punctuation", "Exclamation mark pressed!");
+    }
+
+    public boolean punctuationFieldEmpty() {
+        if(fieldEight.getText().equals("")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Sure you wish to quit the game?");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //NoviceGamePlay.super.onBackPressed();
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialog.create().show();
+    }
+
+
     public void showDialog(View view) {
         Bundle passData = new Bundle();
         passData.putString("correctSentence", randomSentence);
         passData.putString("userSentence", userReturnedValue);
+        passData.putInt("matches", matches);
+        passData.putInt("time", completionTime);
         passData.putInt("score", score);
         RoundStats dialog = new RoundStats();
         dialog.setArguments(passData);
         dialog.show(getFragmentManager(), "My Dialog");
     }
+
+
+    public class GameCountDownTimer extends CountDownTimer {
+
+        private int completionCount;
+        private int countDown;
+
+        public GameCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+            countDown = (int) (millisInFuture/1000);
+
+        }
+
+
+        @Override
+        public void onFinish() {
+            TimesUp dialog = new TimesUp();
+            dialog.show(getFragmentManager(), "Out of Time");
+            Vibrator onTimeFinished = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+            onTimeFinished.vibrate(350);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            timerTextView.setText(Long.toString(millisUntilFinished/1000));
+            completionCount++;
+            countDown--;
+            Log.d("Timer", Integer.toString(completionCount));
+        }
+
+        public int completionTime() {
+            return completionCount;
+        }
+
+        public int timeRemaining() {
+            return countDown;
+        }
+
+    }
+
 
 }
