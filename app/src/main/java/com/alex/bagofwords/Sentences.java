@@ -2,7 +2,6 @@ package com.alex.bagofwords;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -119,8 +118,6 @@ public class Sentences {
 
     // ------ END ---------
 
-
-
     public static int evaluate(String[] correctSentence, String[] userInputSentence) {
         int size = correctSentence.length;
         int score = 0;
@@ -133,8 +130,8 @@ public class Sentences {
     }
 
     public static int evaluate(String correctSentence, String userInputSentence) {
-        String splitCorrectSentence[] = correctSentence.split("\\s+");
-        String splitInputedSentence[] = userInputSentence.split("\\s+");
+        String splitCorrectSentence[] = correctSentence.split("\\s+|(?=\\W)");
+        String splitInputedSentence[] = userInputSentence.split("\\s+|(?=\\W)");
         int size = splitCorrectSentence.length;
         int score = 0;
         for(int i = 0; i < size; i++) {
@@ -176,8 +173,9 @@ public class Sentences {
 
     public static String[] shuffleArraySentence(String[] sentence) {
         Random random = new Random();
-        for(int i = 0; i < sentence.length; i++){
-            int randomPosition = random.nextInt(sentence.length);
+        int wordsLength = sentence.length - 1; // just the length of the words in the sentence
+        for(int i = 0; i < wordsLength; i++){
+            int randomPosition = random.nextInt(wordsLength);
             String temp = sentence[i];
             sentence[i] = sentence[randomPosition];
             sentence[randomPosition] = temp;

@@ -1,6 +1,5 @@
 package com.alex.bagofwords;
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,17 +8,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,50 +29,49 @@ import static android.app.AlertDialog.*;
 
 public class NoviceGamePlay extends AppCompatActivity {
 
-    TextView timer;
-    final long startTime = 10 * 1000;
-    final long intervals = 1000;
+    TextView timerTextView;
+    final long startTime = 12 * 1000; // 10 seconds
+    final long intervals = 1000; // intervals of 10 seconds
     int completionTime;
     int count;
-    GameCountDownTimer countDownTimer;
+    GameCountDownTimer timer;
 
     Button fieldOne;
     Button fieldTwo;
     Button fieldThree;
     Button fieldFour;
-
+    Button fieldFive;
     Button finishBtn;
+
+    final String puncuatationMissing = "#ff4d4d";
 
     String randomSentence;
     String userReturnedValue;
     int matches;
     int score;
-    int resume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novice_game_play);
 
-        timer = (TextView) findViewById(R.id.timer);
-        countDownTimer = new GameCountDownTimer(startTime, intervals);
-        countDownTimer.start();
+
+        timerTextView = (TextView) findViewById(R.id.timer);
+        timer = new GameCountDownTimer(startTime, intervals);
+        timer.start();
 
 
         randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
-        Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
-        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
+        final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
 
         final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
 
-        if(!isNetworkAvailable(getApplicationContext())) {
-            deviceWifiSettings();
-        }
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
         fieldThree = (Button) findViewById(R.id.thirdBtn);
         fieldFour = (Button) findViewById(R.id.fourthBtn);
+        fieldFive = (Button) findViewById(R.id.fifthBtn);
 
         // populate shuffle words
         fieldOne.setText(shuffleSentence[0]);
@@ -89,20 +89,29 @@ public class NoviceGamePlay extends AppCompatActivity {
         findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
         findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
 
+
         finishBtn = (Button) findViewById(R.id.finishBtn);
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                countDownTimer.cancel();
-                completionTime = countDownTimer.completionTime();
-                count = countDownTimer.timeRemaining();
-                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText();
-                matches = Sentences.evaluate(randomSentence, userReturnedValue);
-                score = Sentences.gameScore(matches, count);
-                countDownTimer.cancel();
-                userSharedPrefHandler.updateScore(score);
-                showDialog(v);
+                if(punctuationFieldEmpty()) {
+                    timer.cancel();
+                    completionTime = timer.completionTime();
+                    count = timer.timeRemaining();
+                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + fieldFive.getText();
+                    Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
+                    matches = Sentences.evaluate(randomSentence, userReturnedValue);
+                    score = Sentences.gameScore(matches, count);
+                    //userSharedPrefHandler.updateScore(score);
+                    showDialog(v);
+
+                } else {
+                    fieldFive.setBackgroundColor(Color.parseColor(puncuatationMissing));
+                    Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
+                    Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    punctuationMissing.vibrate(200);
+                }
 
             }
         });
@@ -176,66 +185,58 @@ public class NoviceGamePlay extends AppCompatActivity {
         }
     };
 
-    boolean backButtonPressed = false;
+    public void fullStopOnClick(View view) {
+        Button fullStop = (Button) view;
+        fieldFive.setText(fullStop.getText());
+        Log.d("Punctuation", "Full stop pressed!");
+    }
 
-    @Override
-    public void onBackPressed() {
-        Builder alertDialog = new Builder(this);
-        if (!backButtonPressed) {
-           // countDownTimer.cancel();
-           // final int resume = countDownTimer.timeRemaining();
-            alertDialog.setMessage("Sure you wish to quit the game?");
-            alertDialog.setCancelable(false);
-            alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //NoviceGamePlay.super.onBackPressed();
-                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                    finish();
-                }
-            });
-            alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //GameCountDownTimer resumeTimer = new GameCountDownTimer(resume * 1000, 1000);
-                   // countDownTimer = new GameCountDownTimer(1000, intervals);
-                   // countDownTimer.start();
-                }
-            });
-            alertDialog.create().show();
+    public void questionMarkOnClick(View view) {
+        Button questionMark = (Button) view;
+        fieldFive.setText(questionMark.getText());
+        Log.d("Punctuation", "Question mark pressed!");
+    }
+
+    public void exclamationMarkOnClick(View view) {
+        Button exclamationMark = (Button) view;
+        fieldFive.setText(exclamationMark.getText());
+        Log.d("Punctuation", "Exclamation mark pressed!");
+    }
+
+    public boolean punctuationFieldEmpty() {
+        if(fieldFive.getText().equals("")) {
+            return false;
+        } else {
+            return true;
         }
     }
 
 
-
-    public boolean isNetworkAvailable(final Context context) {
-        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
-    }
-
-    public void deviceWifiSettings() {
+    @Override
+    public void onBackPressed() {
         Builder alertDialog = new Builder(this);
-        alertDialog.setTitle("No Internet Connection");
-        alertDialog.setMessage("Check network settings");
+        alertDialog.setMessage("Sure you wish to quit the game?");
         alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                    //NoviceGamePlay.super.onBackPressed();
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+                finish();
             }
         });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+
             }
         });
         alertDialog.create().show();
-
     }
+
 
     public void showDialog(View view) {
         Bundle passData = new Bundle();
@@ -244,9 +245,9 @@ public class NoviceGamePlay extends AppCompatActivity {
         passData.putInt("matches", matches);
         passData.putInt("time", completionTime);
         passData.putInt("score", score);
-        DisplayDialog dialog = new DisplayDialog();
+        RoundStats dialog = new RoundStats();
         dialog.setArguments(passData);
-        dialog.show(getFragmentManager(), "My Dialog");
+        dialog.show(getFragmentManager(), "Round Stats");
     }
 
     public class GameCountDownTimer extends CountDownTimer {
@@ -255,20 +256,23 @@ public class NoviceGamePlay extends AppCompatActivity {
         private int countDown;
 
         public GameCountDownTimer(long millisInFuture, long countDownInterval) {
-            //super(millisInFuture, countDownInterval);
-            super(10000, 1000);
+            super(millisInFuture, countDownInterval);
             countDown = (int) (millisInFuture/1000);
+
         }
 
 
         @Override
         public void onFinish() {
-            timer.setText("Time's Up!!");
+            TimesUp dialog = new TimesUp();
+            dialog.show(getFragmentManager(), "Out of Time");
+            Vibrator onTimeFinished = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+            onTimeFinished.vibrate(350);
         }
 
         @Override
         public void onTick(long millisUntilFinished) {
-            timer.setText(Long.toString(millisUntilFinished/1000));
+            timerTextView.setText(Long.toString(millisUntilFinished/1000));
             completionCount++;
             countDown--;
             Log.d("Timer", Integer.toString(completionCount));
@@ -282,8 +286,8 @@ public class NoviceGamePlay extends AppCompatActivity {
             return countDown;
         }
 
-
     }
+
 
 }
 

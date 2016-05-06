@@ -1,16 +1,10 @@
 package com.alex.bagofwords;
 
-import android.app.AlertDialog;
 import android.content.ClipData;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -159,7 +153,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
         passData.putString("correctSentence", randomSentence);
         passData.putString("userSentence", userReturnedValue);
         passData.putInt("score", score);
-        DisplayDialog dialog = new DisplayDialog();
+        RoundStats dialog = new RoundStats();
         dialog.setArguments(passData);
         dialog.show(getFragmentManager(), "My Dialog");
     }

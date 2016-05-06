@@ -6,23 +6,21 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-public class DisplayDialog extends DialogFragment{
+public class RoundStats extends DialogFragment{
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.score_display_dialog, null);
+        View view = inflater.inflate(R.layout.round_stats_layout, null);
         TextView correctSentenceTextView = (TextView) view.findViewById(R.id.displayCorrectSentnce);
         TextView userSentenceTextView = (TextView) view.findViewById(R.id.displayUserSentence);
         TextView matchedTextView = (TextView) view.findViewById(R.id.userMatches);

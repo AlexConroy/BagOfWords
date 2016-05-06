@@ -162,7 +162,7 @@ public class AdvancedGamePlay extends AppCompatActivity {
         passData.putString("correctSentence", randomSentence);
         passData.putString("userSentence", userReturnedValue);
         passData.putInt("score", score);
-        DisplayDialog dialog = new DisplayDialog();
+        RoundStats dialog = new RoundStats();
         dialog.setArguments(passData);
         dialog.show(getFragmentManager(), "My Dialog");
     }
