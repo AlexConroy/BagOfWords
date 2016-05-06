@@ -106,7 +106,7 @@ public class Sentences {
         return advancedSentences.get(position);
     }
 
-    public static String pickRandomIAdvancedSentence() {
+    public static String pickRandomAdvancedSentence() {
         random = new Random();
         String randomSentence = advancedSentences.get(random.nextInt(numberOfAdvancedSentences()));
         return randomSentence;

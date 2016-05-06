@@ -59,7 +59,7 @@ public class AdvancedGamePlay extends AppCompatActivity {
         findViewById(R.id.sixthBtn).setOnDragListener(DropListner);
         findViewById(R.id.seventhBtn).setOnDragListener(DropListner);
 
-        randomSentence = Sentences.pickRandomIAdvancedSentence(); // set random sentence
+        randomSentence = Sentences.pickRandomAdvancedSentence(); // set random sentence
         Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
 

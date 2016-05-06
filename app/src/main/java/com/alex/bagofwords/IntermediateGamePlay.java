@@ -24,11 +24,12 @@ public class IntermediateGamePlay extends AppCompatActivity {
     Button fieldFour;
     Button fieldFive;
     Button fieldSix;
-
+    Button fieldSeven;
     Button finishBtn;
 
     String randomSentence;
     String userReturnedValue;
+    int matches;
     int score;
 
 
@@ -43,6 +44,7 @@ public class IntermediateGamePlay extends AppCompatActivity {
         fieldFour = (Button) findViewById(R.id.fourthBtn);
         fieldFive = (Button) findViewById(R.id.fifthBtn);
         fieldSix = (Button) findViewById(R.id.sixthBtn);
+        fieldSeven = (Button) findViewById(R.id.seventhBtn);
 
         findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
         findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
@@ -58,32 +60,20 @@ public class IntermediateGamePlay extends AppCompatActivity {
         findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
         findViewById(R.id.sixthBtn).setOnDragListener(DropListner);
 
-
-        randomSentence = Sentences.pickRandomIntermediateSentence(); // set random sentence
-        //Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
-        final String initialSplit[] = randomSentence.split("\\s+"); // splits selected sentence into array
-
-        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
-
+        /*
         // populate shuffle words
         fieldOne.setText(shuffleSentence[0]);
         fieldTwo.setText(shuffleSentence[1]);
         fieldThree.setText(shuffleSentence[2]);
         fieldFour.setText(shuffleSentence[3]);
         fieldFive.setText(shuffleSentence[4]);
-        fieldSix.setText(shuffleSentence[5]);
+        fieldSix.setText(shuffleSentence[5]);*/
 
         finishBtn = (Button) findViewById(R.id.finishBtn);
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-                userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText().toString() + " " + fieldSix.getText().toString();
-                Toast.makeText(getApplicationContext(), "User input: " + userReturnedValue, Toast.LENGTH_SHORT).show();
-                score = Sentences.evaluate(randomSentence, userReturnedValue);
-                userSharedPrefHandler.updateScore(score);
-                showDialog(v);
-                //Toast.makeText(getApplicationContext(), "Scored: " + score, Toast.LENGTH_LONG).show();
+
             }
         });
 

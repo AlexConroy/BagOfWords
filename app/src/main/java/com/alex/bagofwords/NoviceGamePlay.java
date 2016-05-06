@@ -43,7 +43,7 @@ public class NoviceGamePlay extends AppCompatActivity {
     Button fieldFive;
     Button finishBtn;
 
-    final String puncuatationMissing = "#ff4d4d";
+    final String puncutuationMissing = "#ff4d4d";
 
     String randomSentence;
     String userReturnedValue;
@@ -103,11 +103,11 @@ public class NoviceGamePlay extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
-                    //userSharedPrefHandler.updateScore(score);
+                    userSharedPrefHandler.updateScore(score);
                     showDialog(v);
 
                 } else {
-                    fieldFive.setBackgroundColor(Color.parseColor(puncuatationMissing));
+                    fieldFive.setBackgroundColor(Color.parseColor(puncutuationMissing));
                     Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
                     Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                     punctuationMissing.vibrate(200);
