@@ -200,6 +200,17 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public boolean checker(String s) {
+
+        int i, j;
+        for(i = 0, j = s.length()-1; i <= s.length()/2; i++, j--) {
+            if(s.charAt(i) == s.charAt(j))
+                continue;
+            return false;
+        }
+        return true;
+    }
+
 
 
 }
