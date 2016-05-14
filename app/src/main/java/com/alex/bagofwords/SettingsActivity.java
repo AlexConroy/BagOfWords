@@ -3,7 +3,6 @@ package com.alex.bagofwords;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
     Button mainMenu, leaderboard;
     Button updatePasswordBtn;
     Button updateEmailBtn;
-    UserSharedPrefHandler userSharedPrefHandler;
+    UserSessionHandler userSessionHandler;
 
 
     @Override
@@ -30,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
         updateEmailBtn = (Button) findViewById(R.id.update_emailBtn);
-        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+        userSessionHandler = new UserSessionHandler(getApplicationContext());
 
         mainMenu = (Button) findViewById(R.id.mainMenu);
         mainMenu.setOnClickListener(new View.OnClickListener() {
@@ -70,17 +69,17 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
-        //Toast.makeText(getApplicationContext(), "User Login Status: " + userSharedPrefHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "User Login Status: " + userSessionHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
 
-        if(userSharedPrefHandler.checkLogin())
+        if(userSessionHandler.checkLogin())
             finish();
 
-        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
-        String idSaved = user.get(UserSharedPrefHandler.KEY_ID);
-        String nameSaved = user.get(UserSharedPrefHandler.KEY_NAME);
-        String usernameSaved = user.get(UserSharedPrefHandler.KEY_USERNAME);
-        String emailSaved = user.get(UserSharedPrefHandler.KEY_EMAIL);
-        String scoreSaved = user.get(UserSharedPrefHandler.KEY_SCORE);
+        HashMap<String, String> user = userSessionHandler.getUserDetails();
+        String idSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_ID);
+        String nameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_NAME);
+        String usernameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_USERNAME);
+        String emailSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
+        String scoreSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_SCORE);
 
 
 
@@ -103,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout_icon:
                 Toast.makeText(getApplicationContext(), "Logged out", Toast.LENGTH_LONG).show();
-                userSharedPrefHandler.logoutUser();
+                userSessionHandler.logoutUser();
                 finish();
                 return true;
 

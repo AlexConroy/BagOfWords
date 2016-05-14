@@ -84,7 +84,7 @@ public class AdvancedGamePlay extends AppCompatActivity {
         randomSentence = Sentences.pickRandomAdvancedSentence(); // set random sentence
         //Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
-        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
+        final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit); // shuffles selected sentence
 
         // populate shuffle words
         fieldOne.setText(shuffleSentence[0]);
@@ -103,11 +103,11 @@ public class AdvancedGamePlay extends AppCompatActivity {
                     timer.cancel();
                     completionTime = timer.completionTime();
                     count = timer.timeRemaining();
-                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
                     userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + " " + fieldSix.getText() + " " + fieldSeven.getText() + fieldEight.getText();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
-                    userSharedPrefHandler.updateScore(score);
+                    userSessionHandler.updateScore(score);
                     showDialog(v);
 
                 } else {

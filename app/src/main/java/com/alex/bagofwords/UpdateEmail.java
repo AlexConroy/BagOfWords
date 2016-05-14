@@ -1,7 +1,6 @@
 package com.alex.bagofwords;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -34,7 +32,7 @@ public class UpdateEmail extends AppCompatActivity {
     Button updateEmailBtn;
     Button mainMenu;
 
-    UserSharedPrefHandler userSharedPrefHandler;
+    UserSessionHandler userSessionHandler;
     static final String EMAIL_CHANGE_URL = "http://www.bagofwords-ca400.com/webservice/UpdateEmail.php";
     public static final String KEY_OLD_EMAIL = "oldEmail";
     public static final String KEY_NEW_EMAIL = "newEmail";
@@ -50,9 +48,9 @@ public class UpdateEmail extends AppCompatActivity {
         updateEmailBtn = (Button) findViewById(R.id.update_email);
         mainMenu = (Button) findViewById(R.id.mainMenu);
 
-        userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
-        final String currentEmail = user.get(UserSharedPrefHandler.KEY_EMAIL);
+        userSessionHandler = new UserSessionHandler(getApplicationContext());
+        HashMap<String, String> user = userSessionHandler.getUserDetails();
+        final String currentEmail = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
         Toast.makeText(getApplicationContext(), "User email: " + currentEmail, Toast.LENGTH_LONG).show();
 
         //EditText displayCurrentEmail = (EditText) findViewById(R.id.password);
@@ -108,8 +106,8 @@ public class UpdateEmail extends AppCompatActivity {
         }
     }
 
-    protected boolean matchingEmail(String password, String comparePassword) {
-        return (password.equals(comparePassword));
+    protected boolean matchingEmail(String password, String confirmPassword) {
+        return (password.equals(confirmPassword));
     }
 
     protected boolean validEmail(String email) {
@@ -129,16 +127,16 @@ public class UpdateEmail extends AppCompatActivity {
     }
 
     protected boolean correctPassword(String password) {
-        UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
-        String userPassword = userSharedPrefHandler.getPassword();
+        UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
+        String userPassword = userSessionHandler.getPassword();
         return password.equals(userPassword);
     }
 
 
     private void updateEmail(final String oldEmail, final String newEmail) {
 
-        final UserSharedPrefHandler prefHandler = new UserSharedPrefHandler(getApplicationContext());
-        HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
+        final UserSessionHandler prefHandler = new UserSessionHandler(getApplicationContext());
+        HashMap<String, String> user = userSessionHandler.getUserDetails();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest request;
 
@@ -152,8 +150,8 @@ public class UpdateEmail extends AppCompatActivity {
                             if (success) {
                                 Toast.makeText(getApplicationContext(), "Email Changed", Toast.LENGTH_LONG).show();
                                 prefHandler.setEmail(newEmail);
-                                HashMap<String, String> user = userSharedPrefHandler.getUserDetails();
-                                String test = user.get(UserSharedPrefHandler.KEY_EMAIL);
+                                HashMap<String, String> user = userSessionHandler.getUserDetails();
+                                String test = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
                                 Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

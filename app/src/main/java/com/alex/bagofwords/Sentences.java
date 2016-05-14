@@ -24,9 +24,10 @@ public class Sentences {
         return noviceSentences.size();
     }
 
+    /* remove from all arraylists.
     public static String getNoviceSentence(int position) {
         return noviceSentences.get(position);
-    }
+    } */
 
     public static String pickRandomNoviceSentence() {
         random = new Random();
@@ -76,9 +77,6 @@ public class Sentences {
         return intermediateSentences.size();
     }
 
-    public static String getIntermediateSentence(int position) {
-        return intermediateSentences.get(position);
-    }
 
     public static String pickRandomIntermediateSentence() {
         random = new Random();
@@ -102,9 +100,6 @@ public class Sentences {
         return advancedSentences.size();
     }
 
-    public static String getAdvancedSentence(int position) {
-        return advancedSentences.get(position);
-    }
 
     public static String pickRandomAdvancedSentence() {
         random = new Random();
@@ -118,16 +113,6 @@ public class Sentences {
 
     // ------ END ---------
 
-    public static int evaluate(String[] correctSentence, String[] userInputSentence) {
-        int size = correctSentence.length;
-        int score = 0;
-        for(int i = 0; i < size; i++) {
-            if(correctSentence[i].equals(userInputSentence)) {
-                score++;
-            }
-        }
-        return score;
-    }
 
     public static int evaluate(String correctSentence, String userInputSentence) {
         String splitCorrectSentence[] = correctSentence.split("\\s+|(?=\\W)");
@@ -147,31 +132,7 @@ public class Sentences {
     }
 
 
-    public static int evaluate(String[] correctSentence, String userInputSentence) {
-        String splitSentence[] = userInputSentence.split("\\s+");
-        int size = correctSentence.length;
-        int score = 0;
-        for(int i = 0; i < size; i++) {
-            if(correctSentence[i].equals(splitSentence[i])) {
-                score++;
-            }
-        }
-        return score;
-    }
-
-    public static String shuffleStringSentence(String[] sentence) {
-        Random random = new Random();
-        for(int i = 0; i < sentence.length; i++){
-            int randomPosition = random.nextInt(sentence.length);
-            String temp = sentence[i];
-            sentence[i] = sentence[randomPosition];
-            sentence[randomPosition] = temp;
-        }
-        String joinWords = TextUtils.join(" ", sentence);
-        return joinWords;
-    }
-
-    public static String[] shuffleArraySentence(String[] sentence) {
+    public static String[] shuffleSentence(String[] sentence) {
         Random random = new Random();
         int wordsLength = sentence.length - 1; // just the length of the words in the sentence
         for(int i = 0; i < wordsLength; i++){

@@ -8,9 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -20,7 +17,6 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +60,7 @@ public class NoviceGamePlay extends AppCompatActivity {
         randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
 
-        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit); // shuffles selected sentence
+        final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit); // shuffles selected sentence
 
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
@@ -98,12 +94,12 @@ public class NoviceGamePlay extends AppCompatActivity {
                     timer.cancel();
                     completionTime = timer.completionTime();
                     count = timer.timeRemaining();
-                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
                     userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + fieldFive.getText();
                     Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
-                    userSharedPrefHandler.updateScore(score);
+                    userSessionHandler.updateScore(score);
                     showDialog(v);
 
                 } else {

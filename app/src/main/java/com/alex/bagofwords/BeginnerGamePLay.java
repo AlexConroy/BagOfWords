@@ -55,7 +55,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
 
         randomSentence = Sentences.pickRandomBeginnerSentence();
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)");
-        final String shuffleSentence[] = Sentences.shuffleArraySentence(initialSplit);
+        final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit);
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
@@ -91,12 +91,12 @@ public class BeginnerGamePLay extends AppCompatActivity {
                     timer.cancel();
                     completionTime = timer.completionTime();
                     count = timer.timeRemaining();
-                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
                     userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + fieldSix.getText();
                     Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
-                    userSharedPrefHandler.updateScore(score);
+                    userSessionHandler.updateScore(score);
                     showDialog(v);
 
                 } else {

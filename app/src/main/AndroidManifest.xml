@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--android:debuggable="true">-->
+
+        <!-- android:debuggable="true"> -->
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
@@ -23,7 +24,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/RegisterTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".TestActivity" />
         <activity android:name=".MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,21 +34,21 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UpdatePassword" />
         <activity android:name=".UpdateEmail" />
-        <activity android:name=".TestFetch" />
         <activity android:name=".LeaderBoardActivity" />
-        <activity android:name=".NoviceGamePlay"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".BeginnerGamePLay"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".IntermediateGamePlay"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".AdvancedGamePlay"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".FetchSentences"/>
+        <activity
+            android:name=".NoviceGamePlay"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".BeginnerGamePLay"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".IntermediateGamePlay"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AdvancedGamePlay"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".FetchSentences" />
+
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class UserSharedPrefHandler {
+public class UserSessionHandler {
 
     SharedPreferences sharedPref;
     Editor editor;
@@ -40,7 +40,7 @@ public class UserSharedPrefHandler {
     public static final String KEY_SCORE = "score";
     public static final String KEY_PASSWORD = "password";
 
-    public UserSharedPrefHandler(Context context) {
+    public UserSessionHandler(Context context) {
         this.context = context;
         sharedPref = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = sharedPref.edit();
@@ -167,11 +167,11 @@ public class UserSharedPrefHandler {
                             Boolean success = jsonObject.getBoolean("successful");
                             if (success) {
                                 //Toast.makeText(context, "Updated user score", Toast.LENGTH_LONG).show();
-                                Log.d("UserSharedPrefHandler", "Updated remote user score");
+                                Log.d("UserSessionHandler", "Updated remote user score");
 
                             } else {
                                 Toast.makeText(context, "Error connecting to database!!", Toast.LENGTH_LONG).show();
-                                Log.d("UserSharedPrefHandler", "Error updating remote user score");
+                                Log.d("UserSessionHandler", "Error updating remote user score");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

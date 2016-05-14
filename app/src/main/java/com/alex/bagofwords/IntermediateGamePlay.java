@@ -57,7 +57,7 @@ public class IntermediateGamePlay extends AppCompatActivity {
 
         randomSentence = Sentences.pickRandomIntermediateSentence();
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)");
-        final String shuffledSentence[] = Sentences.shuffleArraySentence(initialSplit);
+        final String shuffledSentence[] = Sentences.shuffleSentence(initialSplit);
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
         fieldTwo = (Button) findViewById(R.id.secondBtn);
@@ -98,12 +98,12 @@ public class IntermediateGamePlay extends AppCompatActivity {
                     timer.cancel();
                     completionTime = timer.completionTime();
                     count = timer.timeRemaining();
-                    UserSharedPrefHandler userSharedPrefHandler = new UserSharedPrefHandler(getApplicationContext());
+                    UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
                     userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + " " + fieldSix.getText() + fieldSeven.getText();
                    // Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
-                    userSharedPrefHandler.updateScore(score);
+                    userSessionHandler.updateScore(score);
                     showDialog(v);
 
                 } else {
