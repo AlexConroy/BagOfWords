@@ -1,18 +1,16 @@
 package com.alex.bagofwords;
 
-import android.content.Context;
-import android.text.TextUtils;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import static java.lang.Math.*;
 
 public class Sentences {
 
-    static ArrayList<String> noviceSentences = new ArrayList<String>();
-    static ArrayList<String> beginnerSentences = new ArrayList<String>();
-    static ArrayList<String> intermediateSentences = new ArrayList<String>();
-    static ArrayList<String> advancedSentences = new ArrayList<String>();
+    static ArrayList<String> noviceSentences = new ArrayList<>();
+    static ArrayList<String> beginnerSentences = new ArrayList<>();
+    static ArrayList<String> intermediateSentences = new ArrayList<>();
+    static ArrayList<String> advancedSentences = new ArrayList<>();
     static Random random;
 
     // ----- Methods for novice sentences -------
@@ -24,10 +22,6 @@ public class Sentences {
         return noviceSentences.size();
     }
 
-    /* remove from all arraylists.
-    public static String getNoviceSentence(int position) {
-        return noviceSentences.get(position);
-    } */
 
     public static String pickRandomNoviceSentence() {
         random = new Random();
@@ -52,9 +46,6 @@ public class Sentences {
         return beginnerSentences.size();
     }
 
-    public static String getBeginnerSentence(int position) {
-        return beginnerSentences.get(position);
-    }
 
     public static String pickRandomBeginnerSentence() {
         random = new Random();
@@ -62,7 +53,7 @@ public class Sentences {
         return randomSentence;
     }
 
-    public static boolean beinngerNotEmpty() {
+    public static boolean beginnerNotEmpty() {
         return numberOfBeginnerSentences() != 0;
     }
 
@@ -116,11 +107,11 @@ public class Sentences {
 
     public static int evaluate(String correctSentence, String userInputSentence) {
         String splitCorrectSentence[] = correctSentence.split("\\s+|(?=\\W)");
-        String splitInputedSentence[] = userInputSentence.split("\\s+|(?=\\W)");
+        String splitInputtedSentence[] = userInputSentence.split("\\s+|(?=\\W)");
         int size = splitCorrectSentence.length;
         int score = 0;
         for(int i = 0; i < size; i++) {
-            if(splitCorrectSentence[i].equals(splitInputedSentence[i])) {
+            if(splitCorrectSentence[i].equals(splitInputtedSentence[i])) {
                 score++;
             }
         }

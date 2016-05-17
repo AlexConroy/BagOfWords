@@ -6,7 +6,10 @@ import java.util.regex.Pattern;
 public class Validation {
 
     static boolean validPassword(String password) {
-        return password.length() >= 6;
+        String passwordPattern = "[!-~]{6,30}$";
+        Pattern pattern = Pattern.compile(passwordPattern);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
     static boolean matchingPassword(String password, String confirmPassword) {
@@ -26,13 +29,14 @@ public class Validation {
     }
 
     static boolean validUsername(String username) {
-
-        return !username.matches("");
+        String usernamePattern = "^[a-zA-Z][a-zA-Z0-9_\\?\\$@]{1,14}$";
+        Pattern pattern = Pattern.compile(usernamePattern);
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
     }
 
-
     static boolean validName(String name) {
-        return (name.length() >= 2 && name.length() <=30);
+        return (name.length() > 2 && name.length() <=30);
     }
 
 

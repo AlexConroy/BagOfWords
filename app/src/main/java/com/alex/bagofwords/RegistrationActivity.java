@@ -30,7 +30,6 @@ import java.util.Map;
 public class RegistrationActivity extends AppCompatActivity {
 
     UserSessionHandler userSessionHandler;
-
     EditText name, username, email, password, confirmPassword;
     Button register;
     TextView login;
@@ -52,9 +51,9 @@ public class RegistrationActivity extends AppCompatActivity {
         confirmPassword = (EditText) findViewById(R.id.compare_input_password);
         register = (Button) findViewById(R.id.button_register);
         login = (TextView) findViewById(R.id.link_login);
-
         userSessionHandler = new UserSessionHandler(getApplicationContext());
 
+        // --- Register button pressed -----
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,13 +64,13 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (!Validation.validName(name.getText().toString())) {
                     name.setError("Name is be between 2 and 30 characters");
                     name.requestFocus();
-                } else if (!Validation.validUsername(name.getText().toString())) {
+                } else if (!Validation.validUsername(username.getText().toString())) {
                     username.setError("Invalid username.");
                     username.requestFocus();
                 } else if (!Validation.validName(name.getText().toString())) {
                     username.setError("Invalid Username");
                     username.requestFocus();
-                } else if (!Validation.validEmail(name.getText().toString())) {
+                } else if (!Validation.validEmail(email.getText().toString())) {
                     email.setError("Invalid Email");
                     email.requestFocus();
                 } else if (!Validation.validPassword(password.getText().toString())) {
@@ -81,13 +80,13 @@ public class RegistrationActivity extends AppCompatActivity {
                     confirmPassword.setError("Passwords don't match");
                     confirmPassword.requestFocus();
                 } else {
+                        // Entered credentials hold true for all validation
                         registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), confirmPassword.getText().toString());
                 }
-
             }
         });
 
-        // Jump to login activity
+        // --- Jump to login activity ---
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,16 +97,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-
+    // --- Post entered credentials to user table ---
     private void registerUser(final String name, final String username, final String email, final String password) {
-        final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUserV6.php";
+        final String REGISTER_URL = "http://www.bagofwords-ca400.com/webservice/RegisterUserV6.php";    // URL script for registration script
         final EditText usernameEditText= (EditText) findViewById(R.id.input_username);
         final EditText emailEditText= (EditText) findViewById(R.id.input_email);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest request;
         request = new StringRequest(Request.Method.POST, REGISTER_URL, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {       // Returned response from database
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("response");
@@ -140,7 +139,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             emailEditText.requestFocus();
                             break;
 
-                        default:
+                        default:    // Error response from database
                             Toast.makeText(getApplicationContext(), "Unsuccessful Registration", Toast.LENGTH_LONG).show();
                     }
 
@@ -149,15 +148,16 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
 
             }
-        }, new Response.ErrorListener() {
+        }, new Response.ErrorListener() {   // Error response from database
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "Error connecting to database, check network connection", Toast.LENGTH_LONG).show();
             }
         }){
+            // User entered credential to be posted
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> hashMap = new HashMap<String, String>();
+                HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("name", name);
                 hashMap.put("username", username);
                 hashMap.put("email", email);
@@ -165,7 +165,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 return hashMap;
             }
         };
-        requestQueue.add(request);
+        requestQueue.add(request);      // Post data to server
 
     }
 

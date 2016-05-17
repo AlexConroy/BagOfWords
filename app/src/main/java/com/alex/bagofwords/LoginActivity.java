@@ -44,29 +44,29 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         userSessionHandler = new UserSessionHandler(getApplicationContext());
-
         login = (EditText) findViewById(R.id.input_login);
         password = (EditText) findViewById(R.id.input_password);
 
+        // --- Login button pressed -----
         Button loginButton = (Button) findViewById(R.id.button_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Check validation before attempting to post to the database
                 assert login != null;
-                if(!Validation.fieldNotEmpty(login.getText().toString())) {
+                if(!Validation.fieldNotEmpty(login.getText().toString())) {     // Validation for login field
                     login.setError("Enter username/email");
                     login.requestFocus();
-                } else if (!Validation.validPassword(password.getText().toString())) {
+                } else if (!Validation.validPassword(password.getText().toString())) {       // Validation for password field
                     password.setError("Invalid Password\n" + "Must contain 2 to 30 characters");
                     password.requestFocus();
                 } else {
-                    userLogin(login.getText().toString(), password.getText().toString()); // post entered credentials to verify presence in datbase
+                    userLogin(login.getText().toString(), password.getText().toString()); // post entered credentials to verify user presence in datbase
                     }
                 }
         });
 
-        // Jump to registration activity
+        // --- Jump to registration activity ---
         TextView registerAccount = (TextView) findViewById(R.id.link_register);
         registerAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,14 +77,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // Post entered credentials to verify presence in database
+
+    // --- Post entered credentials to verify presence in database ---
     private void userLogin(final String login, final String password) {
-        final String LOGIN_URL = "http://www.bagofwords-ca400.com/webservice/LoginUserV3.php"; // url address for login script
+        final String LOGIN_URL = "http://www.bagofwords-ca400.com/webservice/LoginUserV3.php"; // URL address for login script
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest request;
         request = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) { // return here if there is a response from database.
+            public void onResponse(String response) { // Returned response from database
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean success = jsonObject.getBoolean("successful");
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                         String username = jsonObject.getString("username");
                         String email = jsonObject.getString("email");
                         String score = jsonObject.getString("score");
-                        userSessionHandler.establishUserSession(id, name, username, email, score, password);
+                        userSessionHandler.establishUserSession(id, name, username, email, score, password);    // establish user session with fetched data
                         // Jump to main menu activity
                         Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Incorrect credentials", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Incorrect credentials", Toast.LENGTH_LONG).show();     // Incorrect response
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -117,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error connecting to database, check network connection", Toast.LENGTH_LONG).show();
             }
         }){
-            // Values/credentials entered in app to be posted
+            // User entered credential to be posted
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> hashMap = new HashMap<>();
@@ -126,16 +127,16 @@ public class LoginActivity extends AppCompatActivity {
                 return hashMap;
             }
         };
-        requestQueue.add(request);
+        requestQueue.add(request);      // Post data to server
     }
 
-    // Valid if the device has network connection
+    // --- Valid if the device has network connection ---
     public boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
-    // Alert dialog requesting to jump to device network settings
+    // --- Alert dialog requesting to jump to device network settings ---
     public void deviceWifiSettings() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("No Internet Connection");

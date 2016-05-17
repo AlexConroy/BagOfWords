@@ -39,12 +39,19 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        fetchSentences(); // fetch all sentences from database
+        fetchSentences(); // Fetch sentences from database if required
+
+        username = (TextView) findViewById(R.id.username);
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+        score = (TextView) findViewById(R.id.score);
+        id = (TextView) findViewById(R.id.id);
 
         userSessionHandler = new UserSessionHandler(getApplicationContext());
         if(userSessionHandler.checkLogin())
             finish();
 
+        //
         HashMap<String, String> user = userSessionHandler.getUserDetails();
         String idSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_ID);
         String nameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_NAME);
@@ -54,7 +61,7 @@ public class MainMenu extends AppCompatActivity {
         final int scoreToInt = Integer.parseInt(scoreSaved);
 
 
-        if(Sentences.noviceNotEmpty() && Sentences.beinngerNotEmpty()){
+        if(Sentences.noviceNotEmpty() && Sentences.beginnerNotEmpty()){
             playGame = (Button) findViewById(R.id.playGameBtn);
             playGame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,8 +70,6 @@ public class MainMenu extends AppCompatActivity {
                 }
             });
         } else {
-            //Toast.makeText(getApplicationContext(), "Fetching words", Toast.LENGTH_SHORT).show();
-            //fetchNoviceWords();
         }
 
         // Display alert dialog if no network connection
@@ -72,12 +77,8 @@ public class MainMenu extends AppCompatActivity {
             deviceWifiSettings();
         }
 
-        username = (TextView) findViewById(R.id.username);
-        name = (TextView) findViewById(R.id.name);
-        email = (TextView) findViewById(R.id.email);
-        score = (TextView) findViewById(R.id.score);
-        id = (TextView) findViewById(R.id.id);
 
+        // Populate user details on screen
         username.setText(usernameSaved);
         name.setText(nameSaved);
         email.setText(emailSaved);
@@ -89,8 +90,8 @@ public class MainMenu extends AppCompatActivity {
         leaderBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settingsIntent = new Intent(getApplicationContext(), LeaderBoardActivity.class);
-                startActivity(settingsIntent);
+                Intent leaderBoardIntent = new Intent(getApplicationContext(), LeaderBoardActivity.class);
+                startActivity(leaderBoardIntent);
                 finish();
             }
         });
@@ -103,13 +104,11 @@ public class MainMenu extends AppCompatActivity {
                 Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(settingsIntent);
                 finish();
-
             }
         });
-
     }
 
-    // Select game play mode depending on the users score
+    // --- Select game play mode depending on the users score ---
     public void selectGame(int score) {
         if(score < 500) {                                       // Novice game play
             Intent noviceGamePlay = new Intent(getApplicationContext(), NoviceGamePlay.class);
@@ -164,13 +163,13 @@ public class MainMenu extends AppCompatActivity {
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));    // Jump to device network settings
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                // Close alert dialog
             }
         });
         alertDialog.create().show();
@@ -179,12 +178,12 @@ public class MainMenu extends AppCompatActivity {
 
     // --- Fetch novice sentences from database -----
     public void fetchNoviceWords() {
-        final String FETCH_NOVICE_URL = "http://www.bagofwords-ca400.com/webservice/FetchNoviceWords.php";
+        final String FETCH_NOVICE_URL = "http://www.bagofwords-ca400.com/webservice/FetchNoviceWords.php";  // URL script for fetching novice sentence
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, FETCH_NOVICE_URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response) {   // Returned response from database
                         try {
                             JSONArray jsonArray = response.getJSONArray("novice");
                             for(int i = 0; i < jsonArray.length(); i++) {
@@ -195,7 +194,7 @@ public class MainMenu extends AppCompatActivity {
                                 String third = novice.getString("third_word");
                                 String fourth = novice.getString("fourth_word");
                                 String sentence = first + " " + second + " " + third + " " + fourth;
-                                Sentences.addNoviceSentence(sentence);
+                                Sentences.addNoviceSentence(sentence);  // add fetched sentences to novice arraylist
                             }
                             Log.d("Fetching", "Successful novice fetch");
 
@@ -204,25 +203,25 @@ public class MainMenu extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener() {      // Error response from database
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), "Error connecting to database", Toast.LENGTH_LONG).show();
                         Log.d("Fetch", "Unsuccessful novice fetch");
                     }
                 });
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(jsonObjectRequest);    // post the get volley method
 
     }
 
     // --- Fetch beginner sentences from database -----
     public void fetchBeginnerWords() {
-        final String FETCH_BEGINNER_URL = "http://www.bagofwords-ca400.com/webservice/FetchBeginnerWords.php";
+        final String FETCH_BEGINNER_URL = "http://www.bagofwords-ca400.com/webservice/FetchBeginnerWords.php";  // URL script for fetching beginner sentence
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, FETCH_BEGINNER_URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response) {   // Returned response from database
                         try {
                             JSONArray jsonArray = response.getJSONArray("beginner");
                             for(int i = 0; i < jsonArray.length(); i++) {
@@ -234,14 +233,13 @@ public class MainMenu extends AppCompatActivity {
                                 String fourth = beginner.getString("fourth_word");
                                 String fifth = beginner.getString("fifth_word");
                                 String sentence = first + " " + second + " " + third + " " + fourth + " " + fifth;
-                                Sentences.addBeginnerSentence(sentence);
+                                Sentences.addBeginnerSentence(sentence);    // add fetched sentences to beginner arraylist
                             }
                             Log.d("Fetch", "Successful beginner fetch");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -251,17 +249,17 @@ public class MainMenu extends AppCompatActivity {
                         Log.d("Fetch", "Unsuccessful beginner fetch");
                     }
                 });
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(jsonObjectRequest);    // post the get volley method
     }
 
     // --- Fetch intermediate sentences from database -----
     public void fetchIntermediateWords() {
-        final String FETCH_INTERMEDIATE_URL = "http://www.bagofwords-ca400.com/webservice/FetchIntermediateWords.php";
+        final String FETCH_INTERMEDIATE_URL = "http://www.bagofwords-ca400.com/webservice/FetchIntermediateWords.php";  // URL script for fetching intermediate sentences
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, FETCH_INTERMEDIATE_URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response) {       // Returned response from database
                         try {
                             JSONArray jsonArray = response.getJSONArray("intermediate");
                             for(int i = 0; i < jsonArray.length(); i++) {
@@ -283,24 +281,24 @@ public class MainMenu extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener() {      // Error response from database
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), "Error connecting to database", Toast.LENGTH_LONG).show();
                         Log.d("Fetch", "Unsuccessful intermediate fetch");
                     }
                 });
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(jsonObjectRequest);    // post the get volley method
     }
 
     // --- Fetch advance sentences from database -----
     public void fetchAdvanceWords() {
-        final String FETCH_ADVANCED_URL = "http://www.bagofwords-ca400.com/webservice/FetchAdvancedWords.php";
+        final String FETCH_ADVANCED_URL = "http://www.bagofwords-ca400.com/webservice/FetchAdvancedWords.php";      // URL script for fetching advanced sentences
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, FETCH_ADVANCED_URL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONObject response) {   // Returned response from database
                         try {
                             JSONArray jsonArray = response.getJSONArray("advance");
                             for(int i = 0; i < jsonArray.length(); i++) {
@@ -314,7 +312,7 @@ public class MainMenu extends AppCompatActivity {
                                 String sixth = advance.getString("sixth_word");
                                 String seventh = advance.getString("seventh_word");
                                 String sentence = first + " " + second + " " + third + " " + fourth + " " + fifth + " " + sixth + " " + seventh;
-                                Sentences.addAdvancedSentence(sentence);
+                                Sentences.addAdvancedSentence(sentence);    // add fetched sentences to novice arraylist
                             }
                             Log.d("Fetch", "Successful advanced fetch");
 
@@ -323,36 +321,36 @@ public class MainMenu extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener() {      // Error response from database
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), "Error connecting to database", Toast.LENGTH_LONG).show();
                         Log.d("Fetch", "Unsuccessful advanced fetch");
                     }
                 });
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(jsonObjectRequest);     // post the get volley method
     }
 
-
+    // ---  Fetch sentences from database if required (i.e. arraylist is empty) ---
     public void fetchSentences() {
         Log.d("fetchSentences", "Inside fetch sentences method");
         if(!Sentences.noviceNotEmpty()) {
-            fetchNoviceWords();
+            fetchNoviceWords();     // Call fetch novice sentence method if no novice sentences are present on device
             Log.d("FetchSentences", "Fetching novice sentences");
         }
 
-        if(!Sentences.beinngerNotEmpty()) {
-            fetchBeginnerWords();
+        if(!Sentences.beginnerNotEmpty()) {
+            fetchBeginnerWords();   // Call fetch beginner sentence method if no beginner sentences are present on device
             Log.d("FetchSentences", "Fetching beginners sentences");
         }
 
         if(!Sentences.intermediateNotEmpty()) {
-            fetchIntermediateWords();
+            fetchIntermediateWords();   // Call fetch intermediate sentence method if no intermediate sentences are present on device
             Log.d("FetchSentences", "Fetching intermediate sentences");
         }
 
         if(!Sentences.advancedNotEmpty()) {
-            fetchAdvanceWords();
+            fetchAdvanceWords();    // Call fetch advanced sentence method if no advanced sentences are present on device
             Log.d("FetchSentences", "Fetching advanced sentences");
         }
     }
