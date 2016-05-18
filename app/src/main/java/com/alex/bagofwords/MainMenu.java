@@ -69,8 +69,7 @@ public class MainMenu extends AppCompatActivity {
                     selectGame(scoreToInt);
                 }
             });
-        } else {
-        }
+        } // else {}
 
         // Display alert dialog if no network connection
         if(!isNetworkAvailable(getApplicationContext())) {
@@ -85,7 +84,7 @@ public class MainMenu extends AppCompatActivity {
         score.setText(scoreSaved);
         id.setText(idSaved);
 
-        // ------ Leader board Intent --------
+        // ------ Leader Board Intent --------
         leaderBoard = (Button) findViewById(R.id.leaderBoard);
         leaderBoard.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,12 +16,20 @@ public class Validation {
         return (password.equals(confirmPassword));
     }
 
+    static boolean differentPasswords(String currentPassword, String newPassword) {
+        return !currentPassword.equals(newPassword);
+    }
+
     static boolean validEmail(String email) {
         String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; // Email regular expression.
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
 
         return matcher.matches();
+    }
+
+    static boolean matchingEmail(String currentEmail, String newEmail) {
+        return (currentEmail.equals(newEmail));
     }
 
     static boolean fieldNotEmpty(String field) {

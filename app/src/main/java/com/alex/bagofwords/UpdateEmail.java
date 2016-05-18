@@ -27,15 +27,15 @@ import java.util.regex.Pattern;
 public class UpdateEmail extends AppCompatActivity {
 
     EditText newEmail;
-    EditText compareEmail;
+    EditText confirmEmail;
     EditText password;
     Button updateEmailBtn;
     Button mainMenu;
 
     UserSessionHandler userSessionHandler;
-    static final String EMAIL_CHANGE_URL = "http://www.bagofwords-ca400.com/webservice/UpdateEmail.php";
-    public static final String KEY_OLD_EMAIL = "oldEmail";
-    public static final String KEY_NEW_EMAIL = "newEmail";
+    static final String EMAIL_CHANGE_URL = "http://www.bagofwords-ca400.com/webservice/UpdateEmail.php";    // URL for script for updating email
+    public static final String KEY_OLD_EMAIL = "oldEmail";  // key value for old email
+    public static final String KEY_NEW_EMAIL = "newEmail";  // key value for new email
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class UpdateEmail extends AppCompatActivity {
         setContentView(R.layout.activity_update_email);
 
         newEmail = (EditText) findViewById(R.id.new_email);
-        compareEmail = (EditText) findViewById(R.id.compare_new_email);
+        confirmEmail = (EditText) findViewById(R.id.compare_new_email);
         password = (EditText) findViewById(R.id.password);
         updateEmailBtn = (Button) findViewById(R.id.update_email);
         mainMenu = (Button) findViewById(R.id.mainMenu);
@@ -51,11 +51,9 @@ public class UpdateEmail extends AppCompatActivity {
         userSessionHandler = new UserSessionHandler(getApplicationContext());
         HashMap<String, String> user = userSessionHandler.getUserDetails();
         final String currentEmail = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
-        Toast.makeText(getApplicationContext(), "User email: " + currentEmail, Toast.LENGTH_LONG).show();
 
-        //EditText displayCurrentEmail = (EditText) findViewById(R.id.password);
-        //displayCurrentEmail.setText(currentEmail);
 
+        // --- Main Menu Intent ---
         mainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,79 +62,55 @@ public class UpdateEmail extends AppCompatActivity {
             }
         });
 
+        // --- Update Email ---
         updateEmailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validEmail(newEmail.getText().toString())) {
+                if (!Validation.validEmail(newEmail.getText().toString())) {
                     newEmail.setError("Invalid Email");
                     newEmail.requestFocus();
-                } else if (!validEmail(compareEmail.getText().toString())) {
-                    compareEmail.setError("Invalid Email");
-                    compareEmail.requestFocus();
-                } else if (!matchingEmail(newEmail.getText().toString(), compareEmail.getText().toString())) {
-                    compareEmail.setError("Email does not match");
-                    compareEmail.requestFocus();
-                } else if (!validPassword(password.getText().toString())) {
+                } else if (!Validation.validEmail(confirmEmail.getText().toString())) {
+                    confirmEmail.setError("Invalid Email");
+                    confirmEmail.requestFocus();
+                } else if (!Validation.matchingEmail(newEmail.getText().toString(), confirmEmail.getText().toString())) {
+                    confirmEmail.setError("Email does not match");
+                    confirmEmail.requestFocus();
+                } else if (!Validation.validPassword(password.getText().toString())) {
                     password.setError("Password must be greater or equal to 6 characters");
                     password.requestFocus();
-                } else if (newEmail(currentEmail, newEmail.getText().toString())) {
-                    newEmail.setError("Email must differ from old email");
+                } else if (!differentNewEmail(newEmail.getText().toString())) {
+                    newEmail.setError("Email must differ from current email");
                     newEmail.requestFocus();
                 } else if (!correctPassword(password.getText().toString())) {
                     password.setError("Incorrect password");
                     password.requestFocus();
                 } else {
-                    //Toast.makeText(getApplicationContext(), "Successfully updated email", Toast.LENGTH_LONG).show();
-                    //updateEmail(currentEmail, newEmail.getText().toString());
-                    updateEmail(currentEmail, compareEmail.getText().toString());
+                    updateEmail(currentEmail, confirmEmail.getText().toString());   // call updatePassword to update password in database
                 }
-
             }
         });
-
     }
 
 
-    protected boolean compareEmail(String oldPassword, String newPassword) {
-        if(oldPassword.equals(newPassword)) {
-            return false;
-        } else {
-            return true;
-        }
+    // validates if entered new password is different from current password
+    protected boolean differentNewEmail(String newEmail) {
+        UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
+        String usersCurrentEmail = userSessionHandler.getEmail();   // fetch current user email
+        return !usersCurrentEmail.equals(newEmail);
     }
 
-    protected boolean matchingEmail(String password, String confirmPassword) {
-        return (password.equals(confirmPassword));
-    }
-
-    protected boolean validEmail(String email) {
-        String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; // Email regular expression.
-        Pattern pattern = Pattern.compile(emailPattern);
-        Matcher matcher = pattern.matcher(email);
-
-        return matcher.matches();
-    }
-
-    protected boolean validPassword(String password) {
-        return password.length() >= 6;
-    }
-
-    protected boolean newEmail(String oldEmail, String newEmail) {
-        return (oldEmail.equals(newEmail));
-    }
-
+    // validates if password entered is correct
     protected boolean correctPassword(String password) {
         UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
-        String userPassword = userSessionHandler.getPassword();
+        String userPassword = userSessionHandler.getPassword();     // fetch current user password
         return password.equals(userPassword);
     }
 
-
+    // --- Post method for updating password on database ---
     private void updateEmail(final String oldEmail, final String newEmail) {
 
-        final UserSessionHandler prefHandler = new UserSessionHandler(getApplicationContext());
-        HashMap<String, String> user = userSessionHandler.getUserDetails();
+        final UserSessionHandler userSession = new UserSessionHandler(getApplicationContext());
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest request;
 
@@ -149,42 +123,40 @@ public class UpdateEmail extends AppCompatActivity {
                             Boolean success = jsonObject.getBoolean("successful");
                             if (success) {
                                 Toast.makeText(getApplicationContext(), "Email Changed", Toast.LENGTH_LONG).show();
-                                prefHandler.setEmail(newEmail);
+                                userSession.setEmail(newEmail);     //
                                 HashMap<String, String> user = userSessionHandler.getUserDetails();
                                 String test = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
                                 Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
+                                // jump to main menu activity
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Email already taken", Toast.LENGTH_LONG).show();
+                            } else { // Email already exists in database
+                                Toast.makeText(getApplicationContext(), "Email already taken, try another email", Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener() {  // error response from database
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), "Error connecting to database!!", Toast.LENGTH_LONG).show();
                     }
 
                 }) {
+            // key value pairs to be posted to the database
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put(KEY_OLD_EMAIL, oldEmail);
                 params.put(KEY_NEW_EMAIL, newEmail);
                 return params;
-
             }
-
         };
-
-        requestQueue.add(request);
-
+        requestQueue.add(request);  // post key value pairs to database
     }
 
 }

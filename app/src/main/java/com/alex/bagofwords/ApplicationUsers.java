@@ -1,13 +1,16 @@
 package com.alex.bagofwords;
 
+/* *** This class handles setting and getting user details of all users who are registered
+   *** into the application. Used for leader board activity.
+*/
 
-public class Contacts {
+public class ApplicationUsers {
 
     private String number;
     private String username;
     private String score;
 
-    public Contacts(String number, String username, String score) {
+    public ApplicationUsers(String number, String username, String score) {
         this.setNumber(number);
         this.setUsername(username);
         this.setScore(score);

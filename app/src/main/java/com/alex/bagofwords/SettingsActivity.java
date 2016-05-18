@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import java.util.HashMap;
 
 
@@ -27,10 +26,9 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
 
-        updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
-        updateEmailBtn = (Button) findViewById(R.id.update_emailBtn);
         userSessionHandler = new UserSessionHandler(getApplicationContext());
 
+        // ---- Main Menu Intent ----
         mainMenu = (Button) findViewById(R.id.mainMenu);
         mainMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // ----- Leader Board Intent ------
         leaderboard = (Button) findViewById(R.id.leaderBoard);
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // ---- Jump to update password activity -----
+        updatePasswordBtn = (Button) findViewById(R.id.update_passwordBtn);
         updatePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +60,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // ---- Jump to update email activity -----
+        updateEmailBtn = (Button) findViewById(R.id.update_emailBtn);
         updateEmailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,27 +71,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-
-        //Toast.makeText(getApplicationContext(), "User Login Status: " + userSessionHandler.isUserLoggedIn(), Toast.LENGTH_LONG).show();
-
         if(userSessionHandler.checkLogin())
             finish();
-
-        HashMap<String, String> user = userSessionHandler.getUserDetails();
-        String idSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_ID);
-        String nameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_NAME);
-        String usernameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_USERNAME);
-        String emailSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
-        String scoreSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_SCORE);
-
-
-
 
 
     }
 
-
-
+    // -------- Log out icon -----------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -96,16 +85,16 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
+    // --------- Log out button clicked ------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.logout_icon:
                 Toast.makeText(getApplicationContext(), "Logged out", Toast.LENGTH_LONG).show();
-                userSessionHandler.logoutUser();
+                userSessionHandler.logoutUser();    // clear user details and logout user
                 finish();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
