@@ -35,6 +35,24 @@ public class ValidationTest {
         assertEquals(true, Validation.validPassword("@!_:p@ssword,."));
     }
 
+    @Test
+    public void differentPasswordShouldBeFalse() {
+        assertEquals(false, Validation.differentPasswords("123456", "123456"));
+        assertEquals(false, Validation.differentPasswords("1wed@3D", "1wed@3D"));
+        assertEquals(false, Validation.differentPasswords("p@$$word", "p@$$word"));
+        assertEquals(false, Validation.differentPasswords("myn@mei$", "myn@mei$"));
+        assertEquals(false, Validation.differentPasswords("p@$$word", "p@$$word"));
+
+    }
+
+    @Test
+    public void differentPasswordShouldBeTrue() {
+        assertEquals(true, Validation.differentPasswords("qwerty", "password1234"));
+        assertEquals(true, Validation.differentPasswords("123456", "929292"));
+        assertEquals(true, Validation.differentPasswords("1wedfdfsdfd", "qwerty"));
+        assertEquals(true, Validation.differentPasswords("passwfdfsddff", "1992_08"));
+    }
+
 
     @Test
     public void matchingPasswordsShouldBeTrue() {
@@ -55,10 +73,29 @@ public class ValidationTest {
     }
 
     @Test
+    public void matchingEmailShouldBeTrue() {
+        assertEquals(true, Validation.matchingEmail("email@gmail.com", "email@gmail.com"));
+        assertEquals(true, Validation.matchingEmail("testEmail@mail.com", "testEmail@mail.com"));
+        assertEquals(true, Validation.matchingEmail("alexdconroy@hotmail.com", "alexdconroy@hotmail.com"));
+        assertEquals(true, Validation.matchingEmail("joebloggs@gmail.com", "joebloggs@gmail.com"));
+    }
+
+    @Test
+    public void matchingEmailShouldBeFalse() {
+        assertEquals(false, Validation.matchingEmail("email@gmail.com", "email@mail.com"));
+        assertEquals(false, Validation.matchingEmail("testEmail@mail.com", "tesmail@mail.com"));
+        assertEquals(false, Validation.matchingEmail("alexdconroy@hotmail.com", "alexdconroy@mail.com"));
+        assertEquals(false, Validation.matchingEmail("joebloggs@gmail.com", "joeloggs@gmail.com"));
+    }
+
+
+
+    @Test
     public void emailShouldBeTrue() {
         assertEquals(true, Validation.validEmail("email@gmail.com"));
         assertEquals(true, Validation.validEmail("alex.conroy8@mail.dcu.ie"));
         assertEquals(true, Validation.validEmail("testEmail@mail.com"));
+        assertEquals(true, Validation.validEmail("alexdconroy@hotmail.com"));
         assertEquals(true, Validation.validEmail("alexdconroy@hotmail.com"));
     }
 
@@ -91,6 +128,7 @@ public class ValidationTest {
         assertEquals(true, Validation.validUsername("markyMark"));
         assertEquals(true, Validation.validUsername("m1992"));
         assertEquals(true, Validation.validUsername("joe_bloggs@"));
+        assertEquals(true, Validation.validUsername("joe_bloggs@_$?"));
     }
 
     @Test
@@ -98,14 +136,18 @@ public class ValidationTest {
         assertEquals(false, Validation.validUsername(""));
         assertEquals(false, Validation.validUsername("92conroy"));
         assertEquals(false, Validation.validUsername("conroy 92"));
+        assertEquals(false, Validation.validUsername("_conroy92"));
     }
 
     @Test
     public void nameShouldBeTrue() {
         assertEquals(true, Validation.validName("Alex Conroy"));
         assertEquals(true, Validation.validName("Qun Liu"));
-        assertEquals(true, Validation.validName("Mark Nannery"));
+        assertEquals(true, Validation.validName("Mark"));
         assertEquals(true, Validation.validName("Joe Bloggs"));
+        assertEquals(true, Validation.validName("Peter Müller"));
+        assertEquals(true, Validation.validName("Patrick O'Brian"));
+        assertEquals(true, Validation.validName("François Hollande"));
     }
 
     @Test
@@ -114,6 +156,8 @@ public class ValidationTest {
         assertEquals(false, Validation.validName("A"));
         assertEquals(false, Validation.validName("AC"));
         assertEquals(false, Validation.validName("Alex Conroyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"));
+        assertEquals(false, Validation.validName("Se@n M@acken"));
+        assertEquals(false, Validation.validName(""));
     }
 
 

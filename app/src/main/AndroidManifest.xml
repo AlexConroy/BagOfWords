@@ -47,7 +47,6 @@
         <activity
             android:name=".AdvancedGamePlay"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".FetchSentences" />
 
     </application>
 

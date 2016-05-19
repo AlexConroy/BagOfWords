@@ -19,7 +19,7 @@ public class LeaderBoardAdapter extends ArrayAdapter {
     }
 
 
-    public void add(ApplicationUsers object) {
+    public void add(LeaderBoardUser object) {
         super.add(object);
         list.add(object);
     }
@@ -54,10 +54,10 @@ public class LeaderBoardAdapter extends ArrayAdapter {
             contactHolder = (ContactHolder) row.getTag();
         }
 
-        ApplicationUsers applicationUsers = (ApplicationUsers) this.getItem(position);
-        contactHolder.tx_number.setText(applicationUsers.getNumber());
-        contactHolder.tx_username.setText(applicationUsers.getUsername());
-        contactHolder.tx_score.setText(applicationUsers.getScore());
+        LeaderBoardUser leaderBoardUser = (LeaderBoardUser) this.getItem(position);
+        contactHolder.tx_number.setText(leaderBoardUser.getNumber());
+        contactHolder.tx_username.setText(leaderBoardUser.getUsername());
+        contactHolder.tx_score.setText(leaderBoardUser.getScore());
 
         return row;
     }

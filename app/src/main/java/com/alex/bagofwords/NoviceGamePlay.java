@@ -124,7 +124,6 @@ public class NoviceGamePlay extends AppCompatActivity {
             v.startDrag(data, dragShadow, v, 0);
             return false;
         }
-
     };
 
     private class DragShadow extends View.DragShadowBuilder {

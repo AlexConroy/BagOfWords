@@ -4,13 +4,13 @@ package com.alex.bagofwords;
    *** into the application. Used for leader board activity.
 */
 
-public class ApplicationUsers {
+public class LeaderBoardUser {
 
     private String number;
     private String username;
     private String score;
 
-    public ApplicationUsers(String number, String username, String score) {
+    public LeaderBoardUser(String number, String username, String score) {
         this.setNumber(number);
         this.setUsername(username);
         this.setScore(score);

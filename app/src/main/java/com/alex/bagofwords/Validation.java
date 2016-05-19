@@ -44,7 +44,10 @@ public class Validation {
     }
 
     static boolean validName(String name) {
-        return (name.length() > 2 && name.length() <=30);
+        String namePattern = "^[\\p{L} .'-]{3,30}$";
+        Pattern pattern = Pattern.compile(namePattern);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
 
 

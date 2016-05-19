@@ -69,8 +69,8 @@ public class LeaderBoardActivity extends AppCompatActivity {
                                 String scoreFetch = leaderBoard.getString("score");
                                 int number = i + 1;
                                 String numberToString = Integer.toString(number);
-                                ApplicationUsers applicationUsers = new ApplicationUsers(numberToString, usernameFetch, scoreFetch);
-                                leaderBoardAdapter.add(applicationUsers);
+                                LeaderBoardUser leaderBoardUser = new LeaderBoardUser(numberToString, usernameFetch, scoreFetch);
+                                leaderBoardAdapter.add(leaderBoardUser);
                             }
 
                         } catch (JSONException e) {
