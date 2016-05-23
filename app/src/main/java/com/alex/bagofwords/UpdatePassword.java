@@ -105,11 +105,10 @@ public class UpdatePassword extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             Boolean success = jsonObject.getBoolean("successful");
                             if (success) {
-                                Toast.makeText(getApplicationContext(), "Password Changed", Toast.LENGTH_LONG).show();
-                                prefHandler.setPassword(newPassword);       // set new password in user session handler
+                               /* prefHandler.setPassword(newPassword);       // set new password in user session handler
                                 HashMap<String, String> user = userSessionHandler.getUserDetails();
-                                String test = user.get(com.alex.bagofwords.UserSessionHandler.KEY_PASSWORD);
-                                Toast.makeText(getApplicationContext(), "Passwords Changed to: "+ test, Toast.LENGTH_LONG).show();
+                                prefHandler.setPassword(newPassword); */
+                                Toast.makeText(getApplicationContext(), "Successfully update password" , Toast.LENGTH_LONG).show();
                                 // Jump to main menu activity
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

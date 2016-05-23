@@ -61,26 +61,24 @@ public class RegistrationActivity extends AppCompatActivity {
                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
                 // Check validation before attempting to post to the database
-                if (!Validation.validName(name.getText().toString())) {
-                    name.setError("Name is be between 2 and 30 characters");
+                if (!Validation.validName(name.getText().toString())) {    // Validation for name field
+                    name.setError("Invalid name");
                     name.requestFocus();
-                } else if (!Validation.validUsername(username.getText().toString())) {
-                    username.setError("Invalid username.");
+                } else if (!Validation.validUsername(username.getText().toString())) {  // Validation for user field
+                    username.setError("Invalid username.\n" + "Must be between 2 & 15 characters");
                     username.requestFocus();
-                } else if (!Validation.validName(name.getText().toString())) {
-                    username.setError("Invalid Username");
-                    username.requestFocus();
-                } else if (!Validation.validEmail(email.getText().toString())) {
+                } else if (!Validation.validEmail(email.getText().toString())) {    // Validation for email
                     email.setError("Invalid Email");
                     email.requestFocus();
-                } else if (!Validation.validPassword(password.getText().toString())) {
+                } else if (!Validation.validPassword(password.getText().toString())) {  // Validation for password
                     password.setError("Invalid Password");
                     password.requestFocus();
-                } else if (!Validation.matchingPassword(password.getText().toString(), confirmPassword.getText().toString())) {
+                } else if (!Validation.matchingPassword(password.getText().toString(), confirmPassword.getText().toString())) { // Validation for confirm Password
                     confirmPassword.setError("Passwords don't match");
                     confirmPassword.requestFocus();
                 } else {
-                        // Entered credentials hold true for all validation
+                        // Entered credentials hold true for all native validation
+                        // Send valid data to server
                         registerUser(name.getText().toString(), username.getText().toString(), email.getText().toString(), confirmPassword.getText().toString());
                 }
             }
@@ -110,9 +108,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("response");
-
                     switch (success) {
-                        case "successful":
+                        case "successful":  // Successful response
                             String id = jsonObject.getString("id");
                             String score = jsonObject.getString("score");
                             userSessionHandler.establishUserSession(id, name, username, email, score, password);
@@ -122,19 +119,19 @@ public class RegistrationActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                             break;
-                        case "usernameAndEmailExists":
+                        case "usernameAndEmailExists":  // Unsuccessful response, username and email already exist in database
                             usernameEditText.setError("Username already exists");
                             emailEditText.setError("Email already exists");
                             usernameEditText.requestFocus();
                             emailEditText.requestFocus();
                             break;
 
-                        case "usernameExists":
+                        case "usernameExists":      // Unsuccessful response, username already exist in database
                             usernameEditText.setError("Username already exists");
                             usernameEditText.requestFocus();
                             break;
 
-                        case "emailExists":
+                        case "emailExists": // Unsuccessful response, email already exist in database
                             emailEditText.setError("Username already exists");
                             emailEditText.requestFocus();
                             break;
@@ -146,12 +143,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {   // Error response from database
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error connecting to database, check network connection", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Error connecting to database, check network connection", Toast.LENGTH_LONG).show(); // Display error response
             }
         }){
             // User entered credential to be posted

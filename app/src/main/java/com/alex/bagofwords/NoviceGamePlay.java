@@ -96,7 +96,6 @@ public class NoviceGamePlay extends AppCompatActivity {
                     count = timer.timeRemaining();
                     UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
                     userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + fieldFive.getText();
-                    Toast.makeText(getApplicationContext(), "User sentence: " + userReturnedValue, Toast.LENGTH_LONG).show();
                     matches = Sentences.evaluate(randomSentence, userReturnedValue);
                     score = Sentences.gameScore(matches, count);
                     userSessionHandler.updateScore(score);

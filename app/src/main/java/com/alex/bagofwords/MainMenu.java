@@ -51,7 +51,7 @@ public class MainMenu extends AppCompatActivity {
         if(userSessionHandler.checkLogin())
             finish();
 
-        //
+        // Get user details stored in UserSessionHandler
         HashMap<String, String> user = userSessionHandler.getUserDetails();
         String idSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_ID);
         String nameSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_NAME);
@@ -60,16 +60,18 @@ public class MainMenu extends AppCompatActivity {
         String scoreSaved = user.get(com.alex.bagofwords.UserSessionHandler.KEY_SCORE);
         final int scoreToInt = Integer.parseInt(scoreSaved);
 
-
-        if(Sentences.noviceNotEmpty() && Sentences.beginnerNotEmpty()){
+        // validates that all sentences for each game play has sentences fetched from database
+        if(Sentences.noviceNotEmpty() && Sentences.beginnerNotEmpty() && Sentences.intermediateNotEmpty() && Sentences.advancedNotEmpty()){
             playGame = (Button) findViewById(R.id.playGameBtn);
             playGame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectGame(scoreToInt);
+                    selectGame(scoreToInt); // Bring user to game play activity which corresponds to there score
                 }
             });
-        } // else {}
+        }  else {
+            Toast.makeText(getApplicationContext(), "Fetcing sentences from database, please wait a moment", Toast.LENGTH_LONG).show();
+        }
 
         // Display alert dialog if no network connection
         if(!isNetworkAvailable(getApplicationContext())) {
@@ -271,7 +273,7 @@ public class MainMenu extends AppCompatActivity {
                                 String fifth = intermediate.getString("fifth_word");
                                 String sixth = intermediate.getString("sixth_word");
                                 String sentence = first + " " + second + " " + third + " " + fourth + " " + fifth + " " + sixth;
-                                Sentences.addIntermediateSentence(sentence);
+                                Sentences.addIntermediateSentence(sentence);    // add retrieved sentences to arraylist.
                             }
                             Log.d("Fetch", "Successful intermediate fetch");
 

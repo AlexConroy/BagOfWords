@@ -82,7 +82,6 @@ public class AdvancedGamePlay extends AppCompatActivity {
         findViewById(R.id.seventhBtn).setOnDragListener(DropListner);
 
         randomSentence = Sentences.pickRandomAdvancedSentence(); // set random sentence
-        //Toast.makeText(getApplicationContext(), "Sentence picked: " + randomSentence, Toast.LENGTH_SHORT).show(); //Displays selected sentence
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
         final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit); // shuffles selected sentence
 

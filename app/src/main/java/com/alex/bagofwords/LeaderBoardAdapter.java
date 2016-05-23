@@ -45,9 +45,9 @@ public class LeaderBoardAdapter extends ArrayAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = layoutInflater.inflate(R.layout.row_layout, parent, false);
             contactHolder = new ContactHolder();
-            contactHolder.tx_number = (TextView) row.findViewById(R.id.tx_number);
-            contactHolder.tx_username = (TextView) row.findViewById(R.id.tx_username);
-            contactHolder.tx_score = (TextView) row.findViewById(R.id.tx_score);
+            contactHolder.numberTextEdit = (TextView) row.findViewById(R.id.tx_number);
+            contactHolder.usernameTextEdit = (TextView) row.findViewById(R.id.tx_username);
+            contactHolder.scoreTextEdit = (TextView) row.findViewById(R.id.tx_score);
             row.setTag(contactHolder);
 
         } else {
@@ -55,17 +55,17 @@ public class LeaderBoardAdapter extends ArrayAdapter {
         }
 
         LeaderBoardUser leaderBoardUser = (LeaderBoardUser) this.getItem(position);
-        contactHolder.tx_number.setText(leaderBoardUser.getNumber());
-        contactHolder.tx_username.setText(leaderBoardUser.getUsername());
-        contactHolder.tx_score.setText(leaderBoardUser.getScore());
+        contactHolder.numberTextEdit.setText(leaderBoardUser.getNumber());
+        contactHolder.usernameTextEdit.setText(leaderBoardUser.getUsername());
+        contactHolder.scoreTextEdit.setText(leaderBoardUser.getScore());
 
         return row;
     }
 
     static class ContactHolder {
-        TextView tx_number;
-        TextView tx_username;
-        TextView tx_score;
+        TextView numberTextEdit;
+        TextView usernameTextEdit;
+        TextView scoreTextEdit;
     }
 }
 

@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         if(!isNetworkAvailable(getApplicationContext())) {
             deviceWifiSettings();
         }
-
+        // UserSessionHandler object
         userSessionHandler = new UserSessionHandler(getApplicationContext());
         login = (EditText) findViewById(R.id.input_login);
         password = (EditText) findViewById(R.id.input_password);
@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                 if(!Validation.fieldNotEmpty(login.getText().toString())) {     // Validation for login field
                     login.setError("Enter username/email");
                     login.requestFocus();
-                } else if (!Validation.validPassword(password.getText().toString())) {       // Validation for password field
-                    password.setError("Invalid Password\n" + "Must contain 2 to 30 characters");
+                } else if (!Validation.validPassword(password.getText().toString())) {  // Validation for password field
+                    password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
                     userLogin(login.getText().toString(), password.getText().toString()); // post entered credentials to verify user presence in datbase
@@ -96,21 +96,19 @@ public class LoginActivity extends AppCompatActivity {
                         String username = jsonObject.getString("username");
                         String email = jsonObject.getString("email");
                         String score = jsonObject.getString("score");
-                        userSessionHandler.establishUserSession(id, name, username, email, score, password);    // establish user session with fetched data
+                        userSessionHandler.establishUserSession(id, name, username, email, score, password); // establish user session with fetched data.
                         // Jump to main menu activity
                         Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        finish();
-
+                        finish();   // Close LoginActivity
                     } else {
-                        Toast.makeText(getApplicationContext(), "Incorrect credentials", Toast.LENGTH_LONG).show();     // Incorrect response
+                        Toast.makeText(getApplicationContext(), "Incorrect credentials", Toast.LENGTH_LONG).show(); // Incorrect response message
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() { // Error response from database
             @Override
@@ -122,12 +120,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("login", login);
-                hashMap.put("password", password);
+                hashMap.put("login", login);        // login
+                hashMap.put("password", password);  // password
                 return hashMap;
             }
         };
-        requestQueue.add(request);      // Post data to server
+        requestQueue.add(request);  // Post data to server
     }
 
     // --- Valid if the device has network connection ---
@@ -155,6 +153,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         alertDialog.create().show();
-
     }
 }
