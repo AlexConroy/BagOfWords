@@ -132,7 +132,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             break;
 
                         case "emailExists": // Unsuccessful response, email already exist in database
-                            emailEditText.setError("Username already exists");
+                            emailEditText.setError("Email already exists");
                             emailEditText.requestFocus();
                             break;
 

@@ -93,8 +93,8 @@ public class UpdatePassword extends AppCompatActivity {
     // --- Post method for updating password on database ---
     private void updatePassword(final String newPassword) {
 
-        final UserSessionHandler prefHandler = new UserSessionHandler(getApplicationContext());
-        HashMap<String, String> user = prefHandler.getUserDetails();
+        final UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
+        HashMap<String, String> user = userSessionHandler.getUserDetails();
         final String userID = user.get(com.alex.bagofwords.UserSessionHandler.KEY_ID);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PASSWORD_CHANGE_URL,
@@ -105,10 +105,9 @@ public class UpdatePassword extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             Boolean success = jsonObject.getBoolean("successful");
                             if (success) {
-                               /* prefHandler.setPassword(newPassword);       // set new password in user session handler
-                                HashMap<String, String> user = userSessionHandler.getUserDetails();
-                                prefHandler.setPassword(newPassword); */
-                                Toast.makeText(getApplicationContext(), "Successfully update password" , Toast.LENGTH_LONG).show();
+                                userSessionHandler.setPassword(newPassword);       // set new password in user session handler
+                                String test = userSessionHandler.getPassword();
+                                Toast.makeText(getApplicationContext(), "Successfully update password" +  test, Toast.LENGTH_LONG).show();
                                 // Jump to main menu activity
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

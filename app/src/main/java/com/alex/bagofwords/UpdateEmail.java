@@ -125,8 +125,6 @@ public class UpdateEmail extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Email Changed", Toast.LENGTH_LONG).show();
                                 userSession.setEmail(newEmail);     //
                                 HashMap<String, String> user = userSessionHandler.getUserDetails();
-                                String test = user.get(com.alex.bagofwords.UserSessionHandler.KEY_EMAIL);
-                                Toast.makeText(getApplicationContext(), "Email Changed to: "+ test, Toast.LENGTH_LONG).show();
                                 // jump to main menu activity
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

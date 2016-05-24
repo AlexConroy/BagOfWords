@@ -106,23 +106,24 @@ public class Sentences {
 
 
     public static int evaluate(String correctSentence, String userInputSentence) {
-        String splitCorrectSentence[] = correctSentence.split("\\s+|(?=\\W)");
-        String splitInputtedSentence[] = userInputSentence.split("\\s+|(?=\\W)");
+        String splitCorrectSentence[] = correctSentence.split("\\s+|(?=\\W)");  // Spilt words and exclamation marks
+        String splitInputtedSentence[] = userInputSentence.split("\\s+|(?=\\W)"); // Spilt words and exclamation marks
         int size = splitCorrectSentence.length;
         int score = 0;
         for(int i = 0; i < size; i++) {
             if(splitCorrectSentence[i].equals(splitInputtedSentence[i])) {
-                score++;
+                score++;    // count how many matches between correct sentence and user attempt
             }
         }
         return score;
     }
 
+    // Returns score from game, with matches and time remaining.
     public static int gameScore(int matches, int timeRemaining) {
         return (int) (pow(matches, 2) * timeRemaining);
     }
 
-
+    //Randomly shuffle the words of the sentence
     public static String[] shuffleSentence(String[] sentence) {
         Random random = new Random();
         int wordsLength = sentence.length - 1; // just the length of the words in the sentence
@@ -134,9 +135,5 @@ public class Sentences {
         }
         return sentence;
     }
-
-
-
-
 
 }

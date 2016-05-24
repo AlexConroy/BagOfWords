@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class BeginnerGamePLay extends AppCompatActivity {
 
     TextView timerTextView;
-    final long startTime = 15 * 1000;
+    final long startTime = 20 * 1000;
     final long intervals = 1000;
     int completionTime;
     int count;

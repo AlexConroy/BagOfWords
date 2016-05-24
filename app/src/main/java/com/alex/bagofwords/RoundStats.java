@@ -17,8 +17,8 @@ public class RoundStats extends DialogFragment{
 
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    public Dialog onCreateDialog(Bundle savedInstanceState) {   // Display game stats
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // build alert dialog
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.round_stats_layout, null);
         TextView correctSentenceTextView = (TextView) view.findViewById(R.id.displayCorrectSentnce);
@@ -26,14 +26,12 @@ public class RoundStats extends DialogFragment{
         TextView matchedTextView = (TextView) view.findViewById(R.id.userMatches);
         TextView completionTimeTextView = (TextView) view.findViewById(R.id.time);
         TextView scoreTextView = (TextView) view.findViewById(R.id.score);
-
         Bundle getSentence = getArguments();
         String correctSentence = getSentence.getString("correctSentence");
         String userSentence = getSentence.getString("userSentence");
         int matches = getSentence.getInt("matches");
         int userTime = getSentence.getInt("time");
         int score = getSentence.getInt("score");
-
         correctSentenceTextView.setText(correctSentence);
         userSentenceTextView.setText(userSentence);
         matchedTextView.setText(Integer.toString(matches));
@@ -51,9 +49,7 @@ public class RoundStats extends DialogFragment{
 
             }
         });
-
         Dialog dialog = builder.create();
-
         return dialog;
     }
 }

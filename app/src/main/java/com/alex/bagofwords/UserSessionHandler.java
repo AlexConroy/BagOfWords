@@ -111,7 +111,7 @@ public class UserSessionHandler {
 
 
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         user.put(KEY_ID, sharedPref.getString(KEY_ID, null));
         user.put(KEY_NAME, sharedPref.getString(KEY_NAME, null));
         user.put(KEY_USERNAME, sharedPref.getString(KEY_USERNAME, null));

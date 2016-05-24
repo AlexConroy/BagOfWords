@@ -69,8 +69,6 @@ public class MainMenu extends AppCompatActivity {
                     selectGame(scoreToInt); // Bring user to game play activity which corresponds to there score
                 }
             });
-        }  else {
-            Toast.makeText(getApplicationContext(), "Fetcing sentences from database, please wait a moment", Toast.LENGTH_LONG).show();
         }
 
         // Display alert dialog if no network connection
@@ -111,16 +109,16 @@ public class MainMenu extends AppCompatActivity {
 
     // --- Select game play mode depending on the users score ---
     public void selectGame(int score) {
-        if(score < 500) {                                       // Novice game play
+        if(score < 550) {                                       // Novice game play
             Intent noviceGamePlay = new Intent(getApplicationContext(), NoviceGamePlay.class);
             startActivity(noviceGamePlay);
-        } else if(score >= 500 && score < 1000) {               // Beginner game play
+        } else if(score >= 550 && score < 1200) {               // Beginner game play
             Intent beginnerGamePlay = new Intent(getApplicationContext(), BeginnerGamePLay.class);
             startActivity(beginnerGamePlay);
-        } else if(score >= 1000 && score < 1500) {              // Intermediate game play
+        } else if(score >= 1200 && score < 2000) {              // Intermediate game play
             Intent intermediateGamePlay = new Intent(getApplicationContext(), IntermediateGamePlay.class);
             startActivity(intermediateGamePlay);
-        } else if(score >= 1500) {                               // Intermediate game play
+        } else if(score >= 2000) {                               // Intermediate game play
             Intent advanceGamePlay = new Intent(getApplicationContext(), AdvancedGamePlay.class);
             startActivity(advanceGamePlay);
         }

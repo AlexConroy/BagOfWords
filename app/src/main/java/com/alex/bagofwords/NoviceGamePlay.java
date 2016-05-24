@@ -26,7 +26,7 @@ import static android.app.AlertDialog.*;
 public class NoviceGamePlay extends AppCompatActivity {
 
     TextView timerTextView;
-    final long startTime = 12 * 1000; // 10 seconds
+    final long startTime = 15 * 1000; // 10 seconds
     final long intervals = 1000; // intervals of 10 seconds
     int completionTime;
     int count;

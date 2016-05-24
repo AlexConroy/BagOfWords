@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Invalid Password");
                     password.requestFocus();
                 } else {
-                    userLogin(login.getText().toString(), password.getText().toString()); // post entered credentials to verify user presence in datbase
+                    userLogin(login.getText().toString(), password.getText().toString()); // post entered credentials to verify user presence in database
                     }
                 }
         });
