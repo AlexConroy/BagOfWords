@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class BeginnerGamePLay extends AppCompatActivity {
 
     TextView timerTextView;
-    final long startTime = 20 * 1000;
+    final long startTime = 17 * 1000;
     final long intervals = 1000;
     int completionTime;
     int count;
@@ -37,10 +37,10 @@ public class BeginnerGamePLay extends AppCompatActivity {
     Button fieldSix;
     Button finishBtn;
 
-    final String puncutuationMissing = "#ff4d4d";
+    final String punctuationMissing = "#ff4d4d";
 
     String randomSentence;
-    String userReturnedValue;
+    String userRearrangement;
     int matches;
     int score;
 
@@ -70,17 +70,17 @@ public class BeginnerGamePLay extends AppCompatActivity {
         fieldFour.setText(shuffleSentence[3]);
         fieldFive.setText(shuffleSentence[4]);
 
-        findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.thirdBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.fourthBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.fifthBtn).setOnLongClickListener(longListen);
+        findViewById(R.id.firstBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.secondBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.thirdBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.fourthBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.fifthBtn).setOnLongClickListener(dragListener);
 
-        findViewById(R.id.firstBtn).setOnDragListener(DropListner);
-        findViewById(R.id.secondBtn).setOnDragListener(DropListner);
-        findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
-        findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
-        findViewById(R.id.fifthBtn).setOnDragListener(DropListner);
+        findViewById(R.id.firstBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.secondBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.thirdBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.fourthBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.fifthBtn).setOnDragListener(dropAndSwap);
 
 
         finishBtn = (Button) findViewById(R.id.finishBtn);
@@ -92,14 +92,14 @@ public class BeginnerGamePLay extends AppCompatActivity {
                     completionTime = timer.completionTime();
                     count = timer.timeRemaining();
                     UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
-                    userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + fieldSix.getText();
-                    matches = Sentences.evaluate(randomSentence, userReturnedValue);
+                    userRearrangement = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + " " + fieldFive.getText() + fieldSix.getText();
+                    matches = Sentences.evaluate(randomSentence, userRearrangement);
                     score = Sentences.gameScore(matches, count);
                     userSessionHandler.updateScore(score);
                     showDialog(v);
 
                 } else {
-                    fieldSix.setBackgroundColor(Color.parseColor(puncutuationMissing));
+                    fieldSix.setBackgroundColor(Color.parseColor(punctuationMissing));
                     Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
                     Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                     punctuationMissing.vibrate(200);
@@ -110,7 +110,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
 
     }
 
-    View.OnLongClickListener longListen = new View.OnLongClickListener() {
+    View.OnLongClickListener dragListener = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
 
             DragShadow dragShadow = new DragShadow(v);
@@ -124,16 +124,16 @@ public class BeginnerGamePLay extends AppCompatActivity {
 
     private class DragShadow extends View.DragShadowBuilder {
 
-        ColorDrawable greyBox;
+        ColorDrawable shadow;
 
         public DragShadow(View v) {
             super(v);
-            greyBox = new ColorDrawable(Color.LTGRAY);
+            shadow = new ColorDrawable(Color.LTGRAY);
         }
 
         @Override
         public void onDrawShadow(Canvas canvas) {
-            greyBox.draw(canvas);
+            shadow.draw(canvas);
         }
 
         @Override
@@ -142,13 +142,13 @@ public class BeginnerGamePLay extends AppCompatActivity {
             int height = (int) v.getHeight();
             int width = (int) v.getWidth();
 
-            greyBox.setBounds(0, 0, width, height);
+            shadow.setBounds(0, 0, width, height);
             shadowSize.set(width, height);
             shadowTouchPoint.set((int)width/2, (int)height/2);
         }
     }
 
-    View.OnDragListener DropListner = new View.OnDragListener() {
+    View.OnDragListener dropAndSwap = new View.OnDragListener() {
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
@@ -231,7 +231,7 @@ public class BeginnerGamePLay extends AppCompatActivity {
     public void showDialog(View view) {
         Bundle passData = new Bundle();
         passData.putString("correctSentence", randomSentence);
-        passData.putString("userSentence", userReturnedValue);
+        passData.putString("userSentence", userRearrangement);
         passData.putInt("matches", matches);
         passData.putInt("time", completionTime);
         passData.putInt("score", score);

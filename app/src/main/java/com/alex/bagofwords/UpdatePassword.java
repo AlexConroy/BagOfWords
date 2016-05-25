@@ -107,7 +107,7 @@ public class UpdatePassword extends AppCompatActivity {
                             if (success) {
                                 userSessionHandler.setPassword(newPassword);       // set new password in user session handler
                                 String test = userSessionHandler.getPassword();
-                                Toast.makeText(getApplicationContext(), "Successfully update password" +  test, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Successfully update password", Toast.LENGTH_LONG).show();
                                 // Jump to main menu activity
                                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

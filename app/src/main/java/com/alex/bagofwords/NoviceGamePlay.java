@@ -26,12 +26,13 @@ import static android.app.AlertDialog.*;
 public class NoviceGamePlay extends AppCompatActivity {
 
     TextView timerTextView;
-    final long startTime = 15 * 1000; // 10 seconds
+    final long startTime = 13 * 1000; // 13 seconds
     final long intervals = 1000; // intervals of 10 seconds
     int completionTime;
     int count;
     GameCountDownTimer timer;
 
+    // Instantiation of boxes
     Button fieldOne;
     Button fieldTwo;
     Button fieldThree;
@@ -39,28 +40,28 @@ public class NoviceGamePlay extends AppCompatActivity {
     Button fieldFive;
     Button finishBtn;
 
-    final String puncutuationMissing = "#ff4d4d";
+    final String punctuationMissing = "#ff4d4d"; // colour red
 
-    String randomSentence;
-    String userReturnedValue;
-    int matches;
-    int score;
+    String randomSentence;    // Instantiation for randomly selected sentence stored on application
+    String userRearrangement;   // Instantiation of users rearrangement of the words
+    int matches;    // Instantiation of matched words between correct sentence & users rearrangement
+    int score;      // Instantiation of score of game
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novice_game_play);
 
-
+        // Start count down timer
         timerTextView = (TextView) findViewById(R.id.timer);
         timer = new GameCountDownTimer(startTime, intervals);
         timer.start();
 
 
-        randomSentence = Sentences.pickRandomNoviceSentence(); // set random sentence
+        randomSentence = Sentences.pickRandomNoviceSentence(); // select random sentence stored on application
         final String initialSplit[] = randomSentence.split("\\s+|(?=\\W)"); // splits selected sentence into array
 
-        final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit); // shuffles selected sentence
+        final String shuffleSentence[] = Sentences.shuffleSentence(initialSplit); // shuffle selected split sentence randomly
 
 
         fieldOne = (Button) findViewById(R.id.firstBtn);
@@ -69,134 +70,142 @@ public class NoviceGamePlay extends AppCompatActivity {
         fieldFour = (Button) findViewById(R.id.fourthBtn);
         fieldFive = (Button) findViewById(R.id.fifthBtn);
 
-        // populate shuffle words
+        // populate boxes with randomly shuffled words
         fieldOne.setText(shuffleSentence[0]);
         fieldTwo.setText(shuffleSentence[1]);
         fieldThree.setText(shuffleSentence[2]);
         fieldFour.setText(shuffleSentence[3]);
 
-        findViewById(R.id.firstBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.secondBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.thirdBtn).setOnLongClickListener(longListen);
-        findViewById(R.id.fourthBtn).setOnLongClickListener(longListen);
+        // Instantiation of drag gesture
+        findViewById(R.id.firstBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.secondBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.thirdBtn).setOnLongClickListener(dragListener);
+        findViewById(R.id.fourthBtn).setOnLongClickListener(dragListener);
 
-        findViewById(R.id.firstBtn).setOnDragListener(DropListner);
-        findViewById(R.id.secondBtn).setOnDragListener(DropListner);
-        findViewById(R.id.thirdBtn).setOnDragListener(DropListner);
-        findViewById(R.id.fourthBtn).setOnDragListener(DropListner);
+        // Instantiation of drop & swap gesture
+        findViewById(R.id.firstBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.secondBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.thirdBtn).setOnDragListener(dropAndSwap);
+        findViewById(R.id.fourthBtn).setOnDragListener(dropAndSwap);
 
 
+        // --- Round Completion ----
         finishBtn = (Button) findViewById(R.id.finishBtn);
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(punctuationFieldEmpty()) {
-                    timer.cancel();
-                    completionTime = timer.completionTime();
-                    count = timer.timeRemaining();
+                if(punctuationFieldEmpty()) {  // check if punctuation is not missing
+                    timer.cancel(); // Stop timer
+                    completionTime = timer.completionTime(); // get the round completion time
+                    count = timer.timeRemaining();  // get time remaining of round
                     UserSessionHandler userSessionHandler = new UserSessionHandler(getApplicationContext());
-                    userReturnedValue = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + fieldFive.getText();
-                    matches = Sentences.evaluate(randomSentence, userReturnedValue);
-                    score = Sentences.gameScore(matches, count);
-                    userSessionHandler.updateScore(score);
-                    showDialog(v);
+                    userRearrangement = fieldOne.getText() + " " + fieldTwo.getText() + " " + fieldThree.getText() + " " + fieldFour.getText() + fieldFive.getText(); // concatenate users rearrangement
+                    matches = Sentences.evaluate(randomSentence, userRearrangement); // Number of matches between correct and user rearrangement sentence
+                    score = Sentences.gameScore(matches, count); // get score of round
+                    userSessionHandler.updateScore(score); // update users score
+                    showDialog(v); // display round stats
 
                 } else {
-                    fieldFive.setBackgroundColor(Color.parseColor(puncutuationMissing));
+                    fieldFive.setBackgroundColor(Color.parseColor(punctuationMissing)); // Alert user of missing punctuation mark at end of sentence
                     Toast.makeText(getApplicationContext(), "Missing punctuation, please select", Toast.LENGTH_SHORT).show();
                     Vibrator punctuationMissing = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                    punctuationMissing.vibrate(200);
+                    punctuationMissing.vibrate(200); // vibrate device
                 }
-
             }
         });
 
 
     }
 
-    View.OnLongClickListener longListen = new View.OnLongClickListener() {
-        public boolean onLongClick(View v) {
+    // --- Drag box/word listener ---
+    View.OnLongClickListener dragListener = new View.OnLongClickListener() { // Android gesture
+        public boolean onLongClick(View v) { // onClick gesture
 
-            DragShadow dragShadow = new DragShadow(v);
+            DragShadow dragShadow = new DragShadow(v); //
 
-            ClipData data = ClipData.newPlainText("","");
-            v.startDrag(data, dragShadow, v, 0);
+            ClipData data = ClipData.newPlainText("",""); //
+            v.startDrag(data, dragShadow, v, 0); // Move dragged object
             return false;
         }
     };
 
+    // Visible shadow of dragged object
     private class DragShadow extends View.DragShadowBuilder {
 
-        ColorDrawable greyBox;
-
+        ColorDrawable shadow; // Instantiate shadow
         public DragShadow(View v) {
             super(v);
-            greyBox = new ColorDrawable(Color.LTGRAY);
+            shadow = new ColorDrawable(Color.LTGRAY); // Set shadow colour to gray
         }
 
         @Override
         public void onDrawShadow(Canvas canvas) {
-            greyBox.draw(canvas);
+            shadow.draw(canvas);    // Display shadow on drag
         }
 
         @Override
-        public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
+        public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) { // Dimensions of dragged object (i.e. shadow box)
             View v = getView();
-            int height = (int) v.getHeight();
-            int width = (int) v.getWidth();
+            int height = (int) v.getHeight();   // Height of dragged box
+            int width = (int) v.getWidth();     // Wight of dragged box
 
-            greyBox.setBounds(0, 0, width, height);
+            shadow.setBounds(0, 0, width, height);
             shadowSize.set(width, height);
-            shadowTouchPoint.set((int)width/2, (int)height/2);
+            shadowTouchPoint.set((int)width/2, (int)height/2); // Shadow displayed is half size of dragged object
         }
     }
 
-    View.OnDragListener DropListner = new View.OnDragListener() {
+    // --- Drop and Swap words/boxes ---
+    View.OnDragListener dropAndSwap = new View.OnDragListener() { // Android gestures
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int dragEvent = event.getAction();
 
             switch (dragEvent) {
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    Log.i("Drag Event", "Entered");
+                case DragEvent.ACTION_DRAG_ENTERED: // Dragged object/word listener
                     break;
 
-                case DragEvent.ACTION_DRAG_EXITED:
-                    Log.i("Drag Event", "Exited");
+                case DragEvent.ACTION_DRAG_EXITED: // Drag terminated
                     break;
 
-                case DragEvent.ACTION_DROP:
+                case DragEvent.ACTION_DROP: // Drop object/word on droppable object
 
-                    Button target = (Button) v;
-                    Button dragged = (Button) event.getLocalState();
-                    String targetInitialText = (String) target.getText();
-                    target.setText(dragged.getText());
-                    dragged.setText(targetInitialText);
+                    Button dragged = (Button) event.getLocalState();    // dragged object/box
+                    Button target = (Button) v;                         // target drop (i.e where dragged object is dropped)
+                    String targetInitialText = (String) target.getText(); // Store word occupied in target box
+
+                    // Swap words of the dragged and target objects
+                    target.setText(dragged.getText());          // set the word of target object to the dragged objects word
+                    dragged.setText(targetInitialText);         // set the word of dragged object to the word of target object
                     break;
             }
             return true;
         }
     };
 
+    // --- Full stop onClick, populate full stop at end of sentence ---
     public void fullStopOnClick(View view) {
         Button fullStop = (Button) view;
-        fieldFive.setText(fullStop.getText());
+        fieldFive.setText(fullStop.getText()); // set punctuation mark at end of sentence to full stop
         Log.d("Punctuation", "Full stop pressed!");
     }
 
+    // --- Question mark onClick, populate question mark at end of sentence ---
     public void questionMarkOnClick(View view) {
         Button questionMark = (Button) view;
-        fieldFive.setText(questionMark.getText());
+        fieldFive.setText(questionMark.getText());  // set punctuation mark at end of sentence to question mark
         Log.d("Punctuation", "Question mark pressed!");
     }
 
+    // --- Exclamation mark onClick, populate question mark at end of sentence ---
     public void exclamationMarkOnClick(View view) {
         Button exclamationMark = (Button) view;
-        fieldFive.setText(exclamationMark.getText());
+        fieldFive.setText(exclamationMark.getText());   // set punctuation mark at end of sentence to exclamation mark
         Log.d("Punctuation", "Exclamation mark pressed!");
     }
 
+    // Boolean method to check if punctuation is empty or not
     public boolean punctuationFieldEmpty() {
         if(fieldFive.getText().equals("")) {
             return false;
@@ -205,7 +214,7 @@ public class NoviceGamePlay extends AppCompatActivity {
         }
     }
 
-
+    // --- Device back button pressed ----
     @Override
     public void onBackPressed() {
         Builder alertDialog = new Builder(this);
@@ -213,7 +222,7 @@ public class NoviceGamePlay extends AppCompatActivity {
         alertDialog.setCancelable(false);
         alertDialog.setPositiveButton("Quit", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) {    // Quit game and bring user back to main activity.
                     //NoviceGamePlay.super.onBackPressed();
                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -222,20 +231,20 @@ public class NoviceGamePlay extends AppCompatActivity {
                 finish();
             }
         });
-        alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Continue", new DialogInterface.OnClickListener() { // Close alert dialog and allow user to continue
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
         alertDialog.create().show();
     }
 
 
+    // --- Display round stats after completion of round
     public void showDialog(View view) {
         Bundle passData = new Bundle();
         passData.putString("correctSentence", randomSentence);
-        passData.putString("userSentence", userReturnedValue);
+        passData.putString("userSentence", userRearrangement);
         passData.putInt("matches", matches);
         passData.putInt("time", completionTime);
         passData.putInt("score", score);
@@ -244,6 +253,7 @@ public class NoviceGamePlay extends AppCompatActivity {
         dialog.show(getFragmentManager(), "Round Stats");
     }
 
+    // Game countdown timer abstract class
     public class GameCountDownTimer extends CountDownTimer {
 
         private int completionCount;
@@ -255,27 +265,27 @@ public class NoviceGamePlay extends AppCompatActivity {
 
         }
 
-
-        @Override
+        @Override       // Out of time
         public void onFinish() {
             TimesUp dialog = new TimesUp();
             dialog.show(getFragmentManager(), "Out of Time");
-            Vibrator onTimeFinished = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-            onTimeFinished.vibrate(350);
+            Vibrator onTimeFinished = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE); // Instantiate vibration
+            onTimeFinished.vibrate(350);    // Vibrate device if user runs out of time
         }
 
-        @Override
+        @Override       //
         public void onTick(long millisUntilFinished) {
-            timerTextView.setText(Long.toString(millisUntilFinished/1000));
+            timerTextView.setText(Long.toString(millisUntilFinished/1000)); // Change time displayed on game play activity
             completionCount++;
             countDown--;
-            Log.d("Timer", Integer.toString(completionCount));
         }
 
+        // Completion time of round
         public int completionTime() {
             return completionCount;
         }
 
+        // Time remaining of round
         public int timeRemaining() {
             return countDown;
         }
